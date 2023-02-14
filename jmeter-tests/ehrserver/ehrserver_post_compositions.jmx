@@ -1,0 +1,951 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="EHRServer POST /compositions" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(thread_no)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(ramp_up)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${__P(duration)}</stringProp>
+        <stringProp name="ThreadGroup.delay">${__P(startup_delay)}</stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Authorization</stringProp>
+              <stringProp name="Header.value">Bearer ${__P(auth)}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/xml</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+          <stringProp name="filename">./data/${__P(thread_no)}_threads/ehrserver_ehr_uuids_thread_${__threadNum}.csv</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">ehr_uuid</stringProp>
+          <boolProp name="ignoreFirstLine">false</boolProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">false</boolProp>
+          <boolProp name="stopThread">true</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">${__P(contributions_per_user_no)}</stringProp>
+        </LoopController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot; standalone=&quot;yes&quot; ?&gt;&#xd;
+&lt;versions xmlns=&quot;http://schemas.openehr.org/v1&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;&#xd;
+&lt;version xsi:type=&quot;ORIGINAL_VERSION&quot;&gt;&#xd;
+  &lt;contribution&gt;&#xd;
+    &lt;id xsi:type=&quot;HIER_OBJECT_ID&quot;&gt;&#xd;
+      &lt;value&gt;${__UUID()}&lt;/value&gt;&#xd;
+    &lt;/id&gt;&#xd;
+    &lt;namespace&gt;EHR::COMMON&lt;/namespace&gt;&#xd;
+    &lt;type&gt;CONTRIBUTION&lt;/type&gt;&#xd;
+  &lt;/contribution&gt;&#xd;
+  &lt;commit_audit&gt;&#xd;
+    &lt;system_id&gt;OPENEHR-TEST-SUITE&lt;/system_id&gt;&#xd;
+    &lt;committer xsi:type=&quot;PARTY_IDENTIFIED&quot;&gt;&#xd;
+      &lt;external_ref&gt;&#xd;
+        &lt;id xsi:type=&quot;HIER_OBJECT_ID&quot;&gt;&#xd;
+          &lt;value&gt;6e038f55-f36d-4172-8884-e5bf5e800a32&lt;/value&gt;&#xd;
+        &lt;/id&gt;&#xd;
+        &lt;namespace&gt;DEMOGRAPHIC&lt;/namespace&gt;&#xd;
+        &lt;type&gt;PERSON&lt;/type&gt;&#xd;
+      &lt;/external_ref&gt;&#xd;
+      &lt;name&gt;Dr. Kryszyn&lt;/name&gt;&#xd;
+    &lt;/committer&gt;&#xd;
+    &lt;time_committed&gt;&#xd;
+      &lt;value&gt;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX)}&lt;/value&gt;&#xd;
+    &lt;/time_committed&gt;&#xd;
+    &lt;change_type&gt;&#xd;
+      &lt;value&gt;creation&lt;/value&gt;&#xd;
+      &lt;defining_code&gt;&#xd;
+        &lt;terminology_id&gt;&#xd;
+          &lt;value&gt;openehr&lt;/value&gt;&#xd;
+        &lt;/terminology_id&gt;&#xd;
+        &lt;code_string&gt;249&lt;/code_string&gt;&#xd;
+      &lt;/defining_code&gt;&#xd;
+    &lt;/change_type&gt;&#xd;
+  &lt;/commit_audit&gt;&#xd;
+  &lt;data xsi:type=&quot;COMPOSITION&quot; archetype_node_id=&quot;openEHR-EHR-COMPOSITION.prescription.v0&quot;&gt;&#xd;
+    &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+      &lt;value&gt;Prescription&lt;/value&gt;&#xd;
+    &lt;/name&gt;&#xd;
+    &lt;archetype_details&gt;&#xd;
+      &lt;archetype_id&gt;&#xd;
+        &lt;value&gt;openEHR-EHR-COMPOSITION.prescription.v0&lt;/value&gt;&#xd;
+      &lt;/archetype_id&gt;&#xd;
+      &lt;template_id&gt;&#xd;
+        &lt;value&gt;ePrescription (FHIR)&lt;/value&gt;&#xd;
+      &lt;/template_id&gt;&#xd;
+      &lt;rm_version&gt;1.0.2&lt;/rm_version&gt;&#xd;
+    &lt;/archetype_details&gt;&#xd;
+    &lt;language&gt;&#xd;
+      &lt;terminology_id&gt;&#xd;
+        &lt;value&gt;ISO_639-1&lt;/value&gt;&#xd;
+      &lt;/terminology_id&gt;&#xd;
+      &lt;code_string&gt;en&lt;/code_string&gt;&#xd;
+    &lt;/language&gt;&#xd;
+    &lt;territory&gt;&#xd;
+      &lt;terminology_id&gt;&#xd;
+        &lt;value&gt;ISO_3166-1&lt;/value&gt;&#xd;
+      &lt;/terminology_id&gt;&#xd;
+      &lt;code_string&gt;UY&lt;/code_string&gt;&#xd;
+    &lt;/territory&gt;&#xd;
+    &lt;category&gt;&#xd;
+      &lt;value&gt;event&lt;/value&gt;&#xd;
+      &lt;defining_code&gt;&#xd;
+        &lt;terminology_id&gt;&#xd;
+          &lt;value&gt;openehr&lt;/value&gt;&#xd;
+        &lt;/terminology_id&gt;&#xd;
+        &lt;code_string&gt;433&lt;/code_string&gt;&#xd;
+      &lt;/defining_code&gt;&#xd;
+    &lt;/category&gt;&#xd;
+    &lt;composer xsi:type=&quot;PARTY_IDENTIFIED&quot;&gt;&#xd;
+      &lt;external_ref&gt;&#xd;
+        &lt;id xsi:type=&quot;HIER_OBJECT_ID&quot;&gt;&#xd;
+          &lt;value&gt;${__UUID()}&lt;/value&gt;&#xd;
+        &lt;/id&gt;&#xd;
+        &lt;namespace&gt;DEMOGRAPHIC&lt;/namespace&gt;&#xd;
+        &lt;type&gt;PERSON&lt;/type&gt;&#xd;
+      &lt;/external_ref&gt;&#xd;
+      &lt;name&gt;Dr. Kryszyn&lt;/name&gt;&#xd;
+    &lt;/composer&gt;&#xd;
+    &lt;context&gt;&#xd;
+      &lt;start_time&gt;&#xd;
+        &lt;value&gt;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX)}&lt;/value&gt;&#xd;
+      &lt;/start_time&gt;&#xd;
+      &lt;setting&gt;&#xd;
+        &lt;value&gt;primary medical care&lt;/value&gt;&#xd;
+        &lt;defining_code&gt;&#xd;
+          &lt;terminology_id&gt;&#xd;
+            &lt;value&gt;openehr&lt;/value&gt;&#xd;
+          &lt;/terminology_id&gt;&#xd;
+          &lt;code_string&gt;228&lt;/code_string&gt;&#xd;
+        &lt;/defining_code&gt;&#xd;
+      &lt;/setting&gt;&#xd;
+    &lt;/context&gt;&#xd;
+    &lt;content xsi:type=&quot;INSTRUCTION&quot; archetype_node_id=&quot;openEHR-EHR-INSTRUCTION.medication_order.v0&quot;&gt;&#xd;
+      &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+        &lt;value&gt;Medication order&lt;/value&gt;&#xd;
+      &lt;/name&gt;&#xd;
+      &lt;archetype_details&gt;&#xd;
+        &lt;archetype_id&gt;&#xd;
+          &lt;value&gt;openEHR-EHR-INSTRUCTION.medication_order.v0&lt;/value&gt;&#xd;
+        &lt;/archetype_id&gt;&#xd;
+        &lt;template_id&gt;&#xd;
+          &lt;value&gt;ePrescription (FHIR)&lt;/value&gt;&#xd;
+        &lt;/template_id&gt;&#xd;
+        &lt;rm_version&gt;1.0.2&lt;/rm_version&gt;&#xd;
+      &lt;/archetype_details&gt;&#xd;
+      &lt;language&gt;&#xd;
+        &lt;terminology_id&gt;&#xd;
+          &lt;value&gt;ISO_639-1&lt;/value&gt;&#xd;
+        &lt;/terminology_id&gt;&#xd;
+        &lt;code_string&gt;en&lt;/code_string&gt;&#xd;
+      &lt;/language&gt;&#xd;
+      &lt;encoding&gt;&#xd;
+        &lt;terminology_id&gt;&#xd;
+          &lt;value&gt;IANA_character-sets&lt;/value&gt;&#xd;
+        &lt;/terminology_id&gt;&#xd;
+        &lt;code_string&gt;UTF-8&lt;/code_string&gt;&#xd;
+      &lt;/encoding&gt;&#xd;
+      &lt;subject xsi:type=&quot;PARTY_SELF&quot; /&gt;&#xd;
+      &lt;protocol xsi:type=&quot;ITEM_TREE&quot; archetype_node_id=&quot;at0005&quot;&gt;&#xd;
+        &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+          &lt;value&gt;Dose amount description&lt;/value&gt;&#xd;
+        &lt;/name&gt;&#xd;
+        &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0004&quot;&gt;&#xd;
+          &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+            &lt;value&gt;identifier&lt;/value&gt;&#xd;
+          &lt;/name&gt;&#xd;
+          &lt;value xsi:type=&quot;DV_IDENTIFIER&quot;&gt;&#xd;
+            &lt;issuer&gt;openEHR test suite&lt;/issuer&gt;&#xd;
+            &lt;assigner&gt;openEHR test suite&lt;/assigner&gt;&#xd;
+            &lt;id&gt;02027189&lt;/id&gt;&#xd;
+            &lt;type&gt;LOCALID&lt;/type&gt;&#xd;
+          &lt;/value&gt;&#xd;
+        &lt;/items&gt;&#xd;
+      &lt;/protocol&gt;&#xd;
+      &lt;narrative xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+        &lt;value&gt;CvDmYMyMiYRpxcrQYTiiXFdmM,NozXXJ.YTrGzNUWkyvfsJncMWfVhQvpuZLvMekTG.moKmoUxAjTbbWOSmV,aWyBEvTMApo xBWMpQLmSk,dwMCrFqfmqGKUypqHteXGLMBQUDUENpeZFTSCsKZDAfZVJZVYWspRLDJfMFVgDZtkFEuKpfoYHJKdvho,.qpSvTztE.n,lCRuImHiKOtAbfeSeHxCiTpBvqLgODQfbqpJmnmQWaYMaj,B.DFWmb&lt;/value&gt;&#xd;
+      &lt;/narrative&gt;&#xd;
+      &lt;activities archetype_node_id=&quot;at0001&quot;&gt;&#xd;
+        &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+          &lt;value&gt;Order&lt;/value&gt;&#xd;
+        &lt;/name&gt;&#xd;
+        &lt;description xsi:type=&quot;ITEM_TREE&quot; archetype_node_id=&quot;at0002&quot;&gt;&#xd;
+          &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+            &lt;value&gt;Tree&lt;/value&gt;&#xd;
+          &lt;/name&gt;&#xd;
+          &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0070&quot;&gt;&#xd;
+            &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;Medication item&lt;/value&gt;&#xd;
+            &lt;/name&gt;&#xd;
+            &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;otzveoernjidKZztUwwOuKXYpTkaEPZqeRk,uXBpvcd.FVGfGkpeXNFIeRac okAagAanLKhpeikZc Zpt,YbIdBdoUykOwtumenhjLGTXcJl.UkgtRCHmaOdLGGrwE LuiayvqFGzHaQpyyiRbVg,bWOdRrPAFtDHYegUZHnDsPHmjPAbW,SVpjpWeIUMSLmcxQPZhCJgMCWIwWezpyrfHYTJw .XALvUySUmwrmQNEgRyS.BruoWlTiRwadEJqa.vkCCJALTkDRjEgKuNTDYffLkeUlVepG VyUWSWZlRU&lt;/value&gt;&#xd;
+            &lt;/value&gt;&#xd;
+          &lt;/items&gt;&#xd;
+          &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;openEHR-EHR-CLUSTER.medication_substance.v0&quot;&gt;&#xd;
+            &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;Preparation&lt;/value&gt;&#xd;
+            &lt;/name&gt;&#xd;
+            &lt;archetype_details&gt;&#xd;
+              &lt;archetype_id&gt;&#xd;
+                &lt;value&gt;openEHR-EHR-CLUSTER.medication_substance.v0&lt;/value&gt;&#xd;
+              &lt;/archetype_id&gt;&#xd;
+              &lt;template_id&gt;&#xd;
+                &lt;value&gt;ePrescription (FHIR)&lt;/value&gt;&#xd;
+              &lt;/template_id&gt;&#xd;
+              &lt;rm_version&gt;1.0.2&lt;/rm_version&gt;&#xd;
+            &lt;/archetype_details&gt;&#xd;
+            &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0132&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Substance name&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;hIXYeSNlGqVLtyvusHDK ck,UfLG,XdvDdEXnhwnCdOtd. FmQmUdk,OGQQXxpDRCGB chfmQkygfMmzLlReBHaIgRVNmFOqWdsLhPkiY GqvwxXvKdqxdLMW.byTMeGAMfvelUclSIHCljp.dzXpUUAMsbHpGCgl.vshixGAPDGussZJrrSURUfheQPW yTyqBDEGWNzXBBPaeWLP, ppdtGmtyqpljeKNvmbJEBcURTKPQGSUABTfnrFhxP mkLCoF,fl TkfkMaiJ.YKpOnEjtqdTztAoCJepEOIKxdol&lt;/value&gt;&#xd;
+              &lt;/value&gt;&#xd;
+            &lt;/items&gt;&#xd;
+            &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0071&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Form&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;OkDkvOzppVUVIEhdHYQ.vNDrNcfNSWBlgjDTtCi CDmdvoUvAZNkMNuc.hOKGpkchRKVbYovcLeLqiaHtZ.WmKPnYUrdrdgCLUkurCQGYoaWkDCAFiTog,yqSKiHP.fyqbBTkfkxFQUSr BysbFPRJWoYYINZuPnBfbCVaQshZgskKYuPRTF e.ZvDMzFeNPj rsJrnZuxwuzpfBwCmGGvqlAIjpYslqZnlDgMACHJ eXjICzBNmPZVlkHOTzWnJiDHkETwSQeS,NtUgxkotNLFJPyzTuuneXchttuVvUkNb&lt;/value&gt;&#xd;
+              &lt;/value&gt;&#xd;
+            &lt;/items&gt;&#xd;
+            &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0115&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Strength&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;value xsi:type=&quot;DV_QUANTITY&quot;&gt;&#xd;
+                &lt;magnitude&gt;838.3&lt;/magnitude&gt;&#xd;
+                &lt;units&gt;1&lt;/units&gt;&#xd;
+              &lt;/value&gt;&#xd;
+            &lt;/items&gt;&#xd;
+            &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0116&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Strength unit&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;XLPNquEdYWuEdHdLKMqv xULJ .QxDT.NOZWtmyWbRAML.FJMmRFmVaoGEGiFXpYogDlteysnQbJxKojtt.yk,YOBaHDnQvtTNQDjSoTnjHZOVCyYugoHqRu.ChnJNBVGEBLPzkgUGU o T Xqmt,sS,wuDeZmZeIzIgtvzMoNJkAnab.bhnrrKinHdFzro.d,iGhktYMrYANFZueiKtRXasNXBRyS,uRKwmyRxQEIVTMLiPsEOmrGAxfrpQVsRbaFfmJWCbahP,gMsHdOHn,lbtQumqjUBpQUkqxVpXNdHH&lt;/value&gt;&#xd;
+              &lt;/value&gt;&#xd;
+            &lt;/items&gt;&#xd;
+            &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;at0117&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Diluent&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0124&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Diluent amount&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_QUANTITY&quot;&gt;&#xd;
+                  &lt;magnitude&gt;957.1&lt;/magnitude&gt;&#xd;
+                  &lt;units&gt;1&lt;/units&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0125&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Diluent unit&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;xUffwYhHJXJCwdicJADjOKVmgz,lqGHQeLhQieO.EJzEmD.QC gmkbGNMXJXO.vED azHzFrVVWbQerPzgjceQPxtuwhU,xeBUkSGUCBApARKQrA,cMdwpunrgZMqXcOmjk,enICVdrktSnU.wKYfjIXvcAiKZbYAPIKKPSAETXwQpunaCZRMbZwMfyMMovoHFAeTzXuwGyRdPkZlodo.fcvEnqpdvke,nrGDC.VJFaeLHKjyXlJOYLm hmOhRKFtL,DynOgDRQKPjmOdgFMFbtzeCWxZzqHODjeJUgxY,cs&lt;/value&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+            &lt;/items&gt;&#xd;
+            &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;at0126&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Ingredient&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;openEHR-EHR-CLUSTER.medication_substance.v0&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Ingredient substance&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;archetype_details&gt;&#xd;
+                  &lt;archetype_id&gt;&#xd;
+                    &lt;value&gt;openEHR-EHR-CLUSTER.medication_substance.v0&lt;/value&gt;&#xd;
+                  &lt;/archetype_id&gt;&#xd;
+                  &lt;template_id&gt;&#xd;
+                    &lt;value&gt;ePrescription (FHIR)&lt;/value&gt;&#xd;
+                  &lt;/template_id&gt;&#xd;
+                  &lt;rm_version&gt;1.0.2&lt;/rm_version&gt;&#xd;
+                &lt;/archetype_details&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0132&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Substance name&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Q DiWgxdEeDCjZAtKbyrjzKELMcPby.KNwUFOuNFIOyRhicCXAPMjXAe.Zrv,oczzBOc.jA OwHghteEmEeOR.iEhOwhtKZbJhnWmpvgFiKGDDlzMAazqL.inKANoXmBe,YrkHKXqxsGwcXrkvDkIkvsRjMyTGcxpYhekBlGQuQTrgBGDXXfmSROQMNjMlfdRpSFusoMDqLmMbaOPgxHYIj.OCMJTfdo.M  LMwiUvEEPoHJcAu.TogCfTWCBIRtFayDjYrHpuNkTJqXCEVtXshWTWsJyuMrurPp.QFPIXdt&lt;/value&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0071&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Form&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;AESGiHMaUDKL qfZHQtyLSTOPJGK,cGHfCFqiJDUhnFodnUC,mfozOErFcyIUHuaFcfZnBqSCjDov.,thRTJJCmQGmGXc gNLT,paiNYkdIsFBZmOmmMxkl ExmKUB fnTuIUzBhMVKqgQGzSLZqLRltQ,rdsFoHpkEccgJMumguDGtysMYqWIhjrnQqozMbVYohK.JLIQxVkwolqlgPYOijHxq qxEGlJaDqQ pjcyCUKBhvrhHiSkELu,bqGTqMKDcA v,zWf.OBDwmpVbIRSTxeRmREtis lgTsxfRtrK&lt;/value&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0142&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Category&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_CODED_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Product&lt;/value&gt;&#xd;
+                    &lt;defining_code&gt;&#xd;
+                      &lt;terminology_id&gt;&#xd;
+                        &lt;value&gt;local&lt;/value&gt;&#xd;
+                      &lt;/terminology_id&gt;&#xd;
+                      &lt;code_string&gt;at0147&lt;/code_string&gt;&#xd;
+                    &lt;/defining_code&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0115&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Strength&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_QUANTITY&quot;&gt;&#xd;
+                    &lt;magnitude&gt;885.3&lt;/magnitude&gt;&#xd;
+                    &lt;units&gt;1&lt;/units&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0116&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Strength unit&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;sAjiXVTLrPmo,UKXtakEpZgqIuLhFMTPzvlhnAGu.hDUNTdQAcMr rgmqiwIpf,ZIBaEDd.OgXqvILJGOnmxSPesStONjroQmMLpRKZyJkHKpIpvcSela,A.CyKJSWfm,NjNAwTBjyg.rSVMikyUCgDRDfdbWNIWpUGbdkiQkbijxffhjuSLXSZJQSVcMfIfdtsqeEo ac.,BMcelgmgSZi.sAqXOIaocX.EhYEVHRDKOSAuiRTlwVQVhAHgrwPITv ETQOfWwMrM .IOtkaIVqFoTEKSIHbmoVJIAWOZ,vj&lt;/value&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0133&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Description&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;ERtpXuZrEjDrzuSsejIwXixkTJiCMwaIsXE k,mgmmBInkUZVAYIcATlPZOkcOkEQxJQOBpXnqcSLzWcIyBOIChFeDutGKDXdUQdAg nvzkdjyZPPSiQuzsiMsXGyZRbDjVhEPSmOUllHoJQF.YdVXA.mWLAqsPw.FabjhOWtAKg,lUKsoakdDkpHWveLSnMROEICUELGajvLjomtt kewQJGtkHDjLaQmtokUbppJTCxxlDxWAEWCaYvbtZEH.dUUmFf.Wui gqljedSmEmEQvgotLsbjHuTFcaQchIxwNc&lt;/value&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0139&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Ingredient amount&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_QUANTITY&quot;&gt;&#xd;
+                  &lt;magnitude&gt;7.5&lt;/magnitude&gt;&#xd;
+                  &lt;units&gt;1&lt;/units&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0140&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Ingredient amount unit&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;FeKRYEiaZdyZQRWBzoQGIABfZhBczueFaofhOSR.WMbtVyLYLJLRZJRCaOfPSiTOUoDXWvdkRmyWV.nUDWEwhiTYcpOGOgEcEScmTI.HWkmlfnlW,yBYpjB ceYwiVsxxWcUhMXbQeqToBWfHtuPBZYLGaMNqmJSAtkQQwZvaUfXkWemWlKRkpo MIkAAUyVHU.blSLSqngoZ k sgzZVB WIFrwke,GHWAqu.GMevtkCjYVpRT,QlkfeS afqdNqpEAh zXAa,.djYifQLwrysxDkawViHPonlmJa.kzCTa&lt;/value&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0127&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Role&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_CODED_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Therapeutic&lt;/value&gt;&#xd;
+                  &lt;defining_code&gt;&#xd;
+                    &lt;terminology_id&gt;&#xd;
+                      &lt;value&gt;local&lt;/value&gt;&#xd;
+                    &lt;/terminology_id&gt;&#xd;
+                    &lt;code_string&gt;at0080&lt;/code_string&gt;&#xd;
+                  &lt;/defining_code&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+            &lt;/items&gt;&#xd;
+            &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0133&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Description&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;nONOlMZYUAfzsosfKTxzHLLbHAdresYJImyAav.ipUeVQ X.MsytkHUOFHyCrqBBCDxByjZgHBaqNx,diJFYia. DEGKzTn,PVLlURBLRjNOoPAXTL.lvxlENSVBpOwLeVDYkdqbh LGOmm,,YIwvsrAwQGILvjaSCU fbz zy BcqMfEcjtSSUtrCMDCBe.AessfjVfNIGxJq.GyCFWduT WwGidhqCFLKcIvHQegriRseRqMgogEoRBYDVrOiIYEoBjIri bVNX,uiWCtawsQQDmrUKJfJjaX.VvDnhtaQ&lt;/value&gt;&#xd;
+              &lt;/value&gt;&#xd;
+            &lt;/items&gt;&#xd;
+          &lt;/items&gt;&#xd;
+          &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0091&quot;&gt;&#xd;
+            &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;Route&lt;/value&gt;&#xd;
+            &lt;/name&gt;&#xd;
+            &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;BXegDAyJSDF,TcbxG.rHBEZZWlwFPcCclOLat,dEbJkusDGTiyaZi,MpDoTNICWltamnjKOWMxXdtiERiHPo.oJrEWNvRps,XSSfDMuKzsFDw.XUEfG,hXDXQmLQnOFw,uisBjAGFftZELcuaKQFdoeIrddFoDOgIhEfIHmgACJFKfjnBZPjeUOSZGmhZQSXjAQzuBVmeNURjjOPrc UGBMWgpGCuvZlZW weUFxAAyrhUyv.UXbkMtQLipKdyWrESYFKbjfXhWiGIVJgSvUZTFwFmNwbVUDmiuDZdrP,Mmq&lt;/value&gt;&#xd;
+            &lt;/value&gt;&#xd;
+          &lt;/items&gt;&#xd;
+          &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0009&quot;&gt;&#xd;
+            &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;dosageInstructions&lt;/value&gt;&#xd;
+            &lt;/name&gt;&#xd;
+            &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;yCdNxS.MxvUtfQG,lJPyywTugVf,GsCUAmViNmWzqXsvsmJZHvIitUyPAaVFVXqQvqBsfUmaPglFoarwKmcgOeJEMtnQpNSQNndYWPpZPjHrP.BApyHjgdzpVfH.icCRWx.SwqLsoGOewzSQ,pWAkgMPtAPaAGcqJKlU EoljJHmqSfIGwyuzXlRbgNdg,sEgphttFJLKhoiTLxOTBBJixiOPhvplsmDteVQjBTBcThfUsOgoFMNlrrypTgHSfqk .JaaKfJrmYNFHQhYtoC,qzNkLvGwhv,niEpZmGKCv.a&lt;/value&gt;&#xd;
+            &lt;/value&gt;&#xd;
+          &lt;/items&gt;&#xd;
+          &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;at0056&quot;&gt;&#xd;
+            &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;Dose direction&lt;/value&gt;&#xd;
+            &lt;/name&gt;&#xd;
+            &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;at0058&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Dose pattern&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0144&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Dose&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_QUANTITY&quot;&gt;&#xd;
+                  &lt;magnitude&gt;107.5&lt;/magnitude&gt;&#xd;
+                  &lt;units&gt;1&lt;/units&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0145&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Dose unit&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;oVD.eGujctdyMqpZlEVek.JhQTIxo,VPbjSIRgtLELKOIGapDZTV,qHJcWm.cidvNbrh,jua ICxNnWVqGFDbGKCNDpXKNpEvhoZUZsClbnZjvqcD,l,iCsEqFzjUMBWqPIFhdceWHVhkhU.QehMsHLCnbSLswATnPxo kBjGrbNOxpNWol.zn UZOAlXLvHVWXEYyHZJkWOcJkYTevpvMPJhBjPIeeSGC.ngVWIijZpXRFagjQdrwkqkzAfhrzvdL,EyBbsjweJDnMDqlLNKrd eUqIPtktTeHiOxZTGNHP&lt;/value&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;openEHR-EHR-CLUSTER.timing_daily.v0&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Dose timing&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;archetype_details&gt;&#xd;
+                  &lt;archetype_id&gt;&#xd;
+                    &lt;value&gt;openEHR-EHR-CLUSTER.timing_daily.v0&lt;/value&gt;&#xd;
+                  &lt;/archetype_id&gt;&#xd;
+                  &lt;template_id&gt;&#xd;
+                    &lt;value&gt;ePrescription (FHIR)&lt;/value&gt;&#xd;
+                  &lt;/template_id&gt;&#xd;
+                  &lt;rm_version&gt;1.0.2&lt;/rm_version&gt;&#xd;
+                &lt;/archetype_details&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0003&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Frequency&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_QUANTITY&quot;&gt;&#xd;
+                    &lt;magnitude&gt;0.2&lt;/magnitude&gt;&#xd;
+                    &lt;units&gt;1/d&lt;/units&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0014&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Interval&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_DURATION&quot;&gt;&#xd;
+                    &lt;value&gt;PT30M&lt;/value&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0004&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Specific time&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_TIME&quot;&gt;&#xd;
+                    &lt;value&gt;${__time(HH:mm:ss)}&lt;/value&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0026&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Named time event&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;rKcEsDYVrPipNdHmsqkBGFXrlZNGibznju fB nKCHjjdKPniAdU.qVFBXooznpwCtVnaTPzfYDfjmmWsAOULAPnTtoX.JVbXqZGNcaOYOjekSPcB.BILfnye,kylvRMPzhgMiKnXecyWPBsVQAymRnES,uQYSUzuCnbJKsqVucHDJkfAzmNoFAWRjdjIfIvX fwi YqdJkaOiOqu jQSvlLkyEnBQqgWDYdgEqiAWSsplQinGUzriqfnxPCkfP.DK,pXhMdMcIYFPWnGKz,TlbQ ISuLuIPKFJjMxzmkemp&lt;/value&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0023&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Exact timing critical&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_BOOLEAN&quot;&gt;&#xd;
+                    &lt;value&gt;true&lt;/value&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0024&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;As required&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_BOOLEAN&quot;&gt;&#xd;
+                    &lt;value&gt;true&lt;/value&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0025&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;As required criterion&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;dorprISYZAqQnpiyXHUjO,JolgbhVn zESdkIuu rwiNKPW,hfINn,OoSvzxPUkbnevpKyNOjrJDErLELAvjNJdxVrDbpErqqU,f.E,LuuQNTAoVgIxtKKxnBUJXo.JfaHAsO BsREhpqp wTyucivgGyxnNdKNnZqZaa.GQI.wGelXTXncOFWruTMYGkuvSLsORampj.AbyDDAiVrYO RjmGaPKtbTlrlCjqIOxp KaOy MjWynIlVkaoYB BMIEuYcFUINkYUmYrGLeoK.eySOLC,JAAXiclKUKQCwLHJU&lt;/value&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0134&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Infusion administration rate&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_QUANTITY&quot;&gt;&#xd;
+                  &lt;magnitude&gt;102.9&lt;/magnitude&gt;&#xd;
+                  &lt;units&gt;l/h&lt;/units&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0102&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Dose administration duration&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_DURATION&quot;&gt;&#xd;
+                  &lt;value&gt;PT1567518590864763H24M37S&lt;/value&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+            &lt;/items&gt;&#xd;
+            &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0066&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Direction duration&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;value xsi:type=&quot;DV_CODED_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Indefinite&lt;/value&gt;&#xd;
+                &lt;defining_code&gt;&#xd;
+                  &lt;terminology_id&gt;&#xd;
+                    &lt;value&gt;local&lt;/value&gt;&#xd;
+                  &lt;/terminology_id&gt;&#xd;
+                  &lt;code_string&gt;at0067&lt;/code_string&gt;&#xd;
+                &lt;/defining_code&gt;&#xd;
+              &lt;/value&gt;&#xd;
+            &lt;/items&gt;&#xd;
+            &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;openEHR-EHR-CLUSTER.timing_repetition.v0&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Direction repetition&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;archetype_details&gt;&#xd;
+                &lt;archetype_id&gt;&#xd;
+                  &lt;value&gt;openEHR-EHR-CLUSTER.timing_repetition.v0&lt;/value&gt;&#xd;
+                &lt;/archetype_id&gt;&#xd;
+                &lt;template_id&gt;&#xd;
+                  &lt;value&gt;ePrescription (FHIR)&lt;/value&gt;&#xd;
+                &lt;/template_id&gt;&#xd;
+                &lt;rm_version&gt;1.0.2&lt;/rm_version&gt;&#xd;
+              &lt;/archetype_details&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0002&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Repetition interval&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_DURATION&quot;&gt;&#xd;
+                  &lt;value&gt;PT2112118659648382H12M59S&lt;/value&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0001&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Specific date&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_DATE_TIME&quot;&gt;&#xd;
+                  &lt;value&gt;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX)}&lt;/value&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0003&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Specific day of week&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_COUNT&quot;&gt;&#xd;
+                  &lt;magnitude&gt;3&lt;/magnitude&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0004&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Specific day of month&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_COUNT&quot;&gt;&#xd;
+                  &lt;magnitude&gt;22&lt;/magnitude&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;at0006&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Specific event&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0005&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Event name&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;n.NXH.joTUIJhgsqpgb KSepQBJCOGz ZnlDeFjsR,taaEKgfMSsglaLqiwQjfwR.RaU EpEbGbRfmqMGsgBiOnklQkmecEzSCeDbUlUSYMGzhqFRGoDzEwDvwYVbJrA J CpDkDsWetbqNcARemjOraNO,BK.CSgHlf.mQ.wllHtnRrvJtnHhoDYRFGlEY.RDOsuPfaQxXjE.oeHQ,hcwnTXTRtXzFFmkk ksJIB.fvtypgJYae,IthWO SYPViKRVihUmsLizE.skd,HwwtjXRDHkOjWJPJybCpYOovYvI&lt;/value&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+                &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0009&quot;&gt;&#xd;
+                  &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                    &lt;value&gt;Start interval&lt;/value&gt;&#xd;
+                  &lt;/name&gt;&#xd;
+                  &lt;value xsi:type=&quot;DV_DURATION&quot;&gt;&#xd;
+                    &lt;value&gt;P2023Y1M1W3D&lt;/value&gt;&#xd;
+                  &lt;/value&gt;&#xd;
+                &lt;/items&gt;&#xd;
+              &lt;/items&gt;&#xd;
+            &lt;/items&gt;&#xd;
+          &lt;/items&gt;&#xd;
+          &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;at0062&quot;&gt;&#xd;
+            &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;Medication safety&lt;/value&gt;&#xd;
+            &lt;/name&gt;&#xd;
+            &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;at0051&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;maxDosePerPeriod&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0130&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Maximum amount&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_QUANTITY&quot;&gt;&#xd;
+                  &lt;magnitude&gt;176.4&lt;/magnitude&gt;&#xd;
+                  &lt;units&gt;1&lt;/units&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0146&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Maximum amount dose unit&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;trxru, fIkjOXPEGOka.qklcmyCAFLpuDVOPeUgLbeT.JfXZMwN.lgOB.KYYwReNXpfXLZnrrUfOfFA,EvFszlhvD ucDKb.WxaWnMDQICCxCoPzrOPQzMxw.rjnkIPVyqV,,yVAdNxTCsKerqLhOMKWCqbQeUDzZGrnn kIVyGXeNFJhbkuFTpVIxipTKizTephJ KqpiIPdMswqexlyDapLTgfuIhagUZNPIAzaTqH,HaJYGgkTskykslWSUWGEdfGckXBphTmKbjJvkvzCjlov.modlZoluK ciWJVveL&lt;/value&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0053&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Allowed period&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_DURATION&quot;&gt;&#xd;
+                  &lt;value&gt;PT2161153835502493H55M13S&lt;/value&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+            &lt;/items&gt;&#xd;
+            &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0162&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Override reason&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;qrkfSxqTFBWW,TpZngAaMWjYwRHXNVWjWFdJpYoISeklgOnlEyiUHPdzKyzp BMx jhsEiT vn.nmuT.NztXKHXYY.vnVZMYeSSkdtLoBxXfbmXJHawJeyEtVPjMVojijeQjVJKAAViptKHvjiBwAWluY,.ZtRttWmsKwloxeefWCiyWsJOSaFmxHePTgiBCdMaIIVMqslkXHGKrEeoUcTwppIBtDjJI dYRg,xCfcgNj,BmR.HCraiWaVFsXoW.h,RfbApc pPzgLTbizwxXC.GHxV.sUCiDoKsmZSaXHoe&lt;/value&gt;&#xd;
+              &lt;/value&gt;&#xd;
+            &lt;/items&gt;&#xd;
+          &lt;/items&gt;&#xd;
+          &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0044&quot;&gt;&#xd;
+            &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;additionalInstructions&lt;/value&gt;&#xd;
+            &lt;/name&gt;&#xd;
+            &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;uWyFBYJsXFNKjRPNzcaqMFdFgUQW bxOHtPCwVMDWEeXdKhs,zQsvb ,rXXtqKzXWfUyDpmYCbTCFVEubRFoqhvdSWxESfGgIGgMTdXpJh,MnD LkZHLLxyDoFjl.NltoxwvKoKvwPiVsxbjeKAQAQjy.kwOUmaBeCIoQ.zycEFJs.rqbVeYjWhyHqlrcipwd.hZNsqvOdnqkaVxWUyq UBZZYI.EOvNuFXggpn.XKWfuEnCxkbTLX eZXTlEbuDaCZOpHxEXtjqZL.eqXcFUdxTJORPLkZmtGw.FWIFhmzE&lt;/value&gt;&#xd;
+            &lt;/value&gt;&#xd;
+          &lt;/items&gt;&#xd;
+          &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0018&quot;&gt;&#xd;
+            &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;reason&lt;/value&gt;&#xd;
+            &lt;/name&gt;&#xd;
+            &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;hQZGokaDLHOXjSUjNaVrnjAdwmtafplhDeZRZAmDRHegGHNcxARka mOn.GHhsNDxzwlfMIzrQGCvqQuJFMNvoxydsDgitgy,SdiSGWMJ,M,YYXqrCoFbVzPNyEOxZsjOxjivJiTFlt SHKBNFamIJQmOn,sxVftQOrdbyUiggPdLpfNLsREGqIwqxvqcDnjjyGxiwmw mbfUtmqx,CmvXYRWcPit t.viaNAQejNZupdE..EdEguhFBLnCPDOBnsbktZWiZtms BE.pulO.dBkLyutbebSZpImabgHayyRi&lt;/value&gt;&#xd;
+            &lt;/value&gt;&#xd;
+          &lt;/items&gt;&#xd;
+          &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;at0113&quot;&gt;&#xd;
+            &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;Order details&lt;/value&gt;&#xd;
+            &lt;/name&gt;&#xd;
+            &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;openEHR-EHR-CLUSTER.medication_course_summary.v0&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Course summary&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;archetype_details&gt;&#xd;
+                &lt;archetype_id&gt;&#xd;
+                  &lt;value&gt;openEHR-EHR-CLUSTER.medication_course_summary.v0&lt;/value&gt;&#xd;
+                &lt;/archetype_id&gt;&#xd;
+                &lt;template_id&gt;&#xd;
+                  &lt;value&gt;ePrescription (FHIR)&lt;/value&gt;&#xd;
+                &lt;/template_id&gt;&#xd;
+                &lt;rm_version&gt;1.0.2&lt;/rm_version&gt;&#xd;
+              &lt;/archetype_details&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0001&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Status&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_CODED_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Active&lt;/value&gt;&#xd;
+                  &lt;defining_code&gt;&#xd;
+                    &lt;terminology_id&gt;&#xd;
+                      &lt;value&gt;local&lt;/value&gt;&#xd;
+                    &lt;/terminology_id&gt;&#xd;
+                    &lt;code_string&gt;at0021&lt;/code_string&gt;&#xd;
+                  &lt;/defining_code&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0002&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_CODED_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Date ordered/recommended&lt;/value&gt;&#xd;
+                  &lt;defining_code&gt;&#xd;
+                    &lt;terminology_id&gt;&#xd;
+                      &lt;value&gt;local&lt;/value&gt;&#xd;
+                    &lt;/terminology_id&gt;&#xd;
+                    &lt;code_string&gt;at0003&lt;/code_string&gt;&#xd;
+                  &lt;/defining_code&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_DATE_TIME&quot;&gt;&#xd;
+                  &lt;value&gt;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX)}&lt;/value&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+            &lt;/items&gt;&#xd;
+          &lt;/items&gt;&#xd;
+          &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;openEHR-EHR-CLUSTER.medication_authorisation.v0&quot;&gt;&#xd;
+            &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;Authorisation details&lt;/value&gt;&#xd;
+            &lt;/name&gt;&#xd;
+            &lt;archetype_details&gt;&#xd;
+              &lt;archetype_id&gt;&#xd;
+                &lt;value&gt;openEHR-EHR-CLUSTER.medication_authorisation.v0&lt;/value&gt;&#xd;
+              &lt;/archetype_id&gt;&#xd;
+              &lt;template_id&gt;&#xd;
+                &lt;value&gt;ePrescription (FHIR)&lt;/value&gt;&#xd;
+              &lt;/template_id&gt;&#xd;
+              &lt;rm_version&gt;1.0.2&lt;/rm_version&gt;&#xd;
+            &lt;/archetype_details&gt;&#xd;
+            &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0025&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;numberOfRepeatsAllowed&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;value xsi:type=&quot;DV_COUNT&quot;&gt;&#xd;
+                &lt;magnitude&gt;46&lt;/magnitude&gt;&#xd;
+              &lt;/value&gt;&#xd;
+            &lt;/items&gt;&#xd;
+            &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0072&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;validityPeriod&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;value xsi:type=&quot;DV_DATE_TIME&quot;&gt;&#xd;
+                &lt;value&gt;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX)}&lt;/value&gt;&#xd;
+              &lt;/value&gt;&#xd;
+            &lt;/items&gt;&#xd;
+          &lt;/items&gt;&#xd;
+          &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;at0129&quot;&gt;&#xd;
+            &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;Dispense directions&lt;/value&gt;&#xd;
+            &lt;/name&gt;&#xd;
+            &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0106&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Dispense instruction&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;IyfCsMhxSopHbtIeVKKzCzoUh mrRkYC.QopAVbHHU SIXQepGbKVbOaVaoZJDxCHcBVBkbuCFGiZYiATWKXINyceHvnB.x .aKV icIPJZLvrAP,JNpwl JZJRRlyrhkCAczHBrSiSlVYhXN.FyUIAMTgZgadxxhVulbCwInbtbBtO afNtdZRhaPVvxTTymPjm,JZjEpMRISP VBrjlpe PUKGzkNaID,pwekMtm.wUoARzYaxdvtoawZsNrqNn,yxaR.wdbMuZxgbBvxKGMBRu.UFTr,EBkTZcHqWPJmu&lt;/value&gt;&#xd;
+              &lt;/value&gt;&#xd;
+            &lt;/items&gt;&#xd;
+            &lt;items xsi:type=&quot;CLUSTER&quot; archetype_node_id=&quot;openEHR-EHR-CLUSTER.medication_supply_amount.v0&quot;&gt;&#xd;
+              &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                &lt;value&gt;Dispense amount&lt;/value&gt;&#xd;
+              &lt;/name&gt;&#xd;
+              &lt;archetype_details&gt;&#xd;
+                &lt;archetype_id&gt;&#xd;
+                  &lt;value&gt;openEHR-EHR-CLUSTER.medication_supply_amount.v0&lt;/value&gt;&#xd;
+                &lt;/archetype_id&gt;&#xd;
+                &lt;template_id&gt;&#xd;
+                  &lt;value&gt;ePrescription (FHIR)&lt;/value&gt;&#xd;
+                &lt;/template_id&gt;&#xd;
+                &lt;rm_version&gt;1.0.2&lt;/rm_version&gt;&#xd;
+              &lt;/archetype_details&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0161&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Amount description&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;w obUfuxvq.yUMEXjQPOYbcuVgdCHsl,ysXdSGoioXaBDfRFUyjOieqiCiIlXvzPPohPqsZxiRLcETFmmURBDh.ghakKrLCDyztAqlFYrQSz,TvzmCLOZqQ.tPEJaDd.RsJembO ZpByddXGWLiAThUMZdCoGQyGTR,ZkSUEfqbEwOP.dmvUsYhnGKRrRaTpYbMKlvxaoa.vTR gvRCRPtAVdsNjPKRtmlymUd,tFoeteWZnNZUOJNRiTLXSwocTibUYcuVmVsFMZNTYXVfZYlbXey,Emw.PFmnactSjZWPz&lt;/value&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0131&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Amount&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_QUANTITY&quot;&gt;&#xd;
+                  &lt;magnitude&gt;511.5&lt;/magnitude&gt;&#xd;
+                  &lt;units&gt;1&lt;/units&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0147&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Units&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;odsjiuSabMQonA,vOfiReiFEBzCsinlBnCJsRyCTfDMgrwqXHyvKeiPLMyKyn MhuBbdCHPPKTuFusnAtxZSv uPgwdDRjNSBKBOCHXjCzyYBctfHOHYgNm,nyTqkqrApz,GEJrSlmcWGwMrgeYWSF, WLHYSsw,uECFdrLlFYXBqLJEAwW,RflGNPmelNXxomcBagLQOEbhu XIVp,myzj,ZElgXmhTDvPZWMSNxievvTqJbmBjGclCKZcSvX,HPZLwEmEZmzBp.Ozdjiznaji.JnuecttQD,rZnwzkxofL&lt;/value&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+              &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0142&quot;&gt;&#xd;
+                &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+                  &lt;value&gt;Duration of supply&lt;/value&gt;&#xd;
+                &lt;/name&gt;&#xd;
+                &lt;value xsi:type=&quot;DV_DURATION&quot;&gt;&#xd;
+                  &lt;value&gt;PT1069791295201180H12M47S&lt;/value&gt;&#xd;
+                &lt;/value&gt;&#xd;
+              &lt;/items&gt;&#xd;
+            &lt;/items&gt;&#xd;
+          &lt;/items&gt;&#xd;
+          &lt;items xsi:type=&quot;ELEMENT&quot; archetype_node_id=&quot;at0167&quot;&gt;&#xd;
+            &lt;name xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;Comment&lt;/value&gt;&#xd;
+            &lt;/name&gt;&#xd;
+            &lt;value xsi:type=&quot;DV_TEXT&quot;&gt;&#xd;
+              &lt;value&gt;iWBjjypU,dNZOXKJrohinlaLYK Dyf hTJbcOvaSWDS.JjbS.qCrbLpPXqadEvKuex,AFwlUfYWGssdWkDu,Bd rNatNyiOqFNsqJESooVVZRwDvzKxDPwS zWZfiPkxGYvVi hhtTbXtzjFZporPdDTVNjBZMYKqOKdYBxgKyyWnke,paR qnLjBYhUFBfDyGKwlKnhGBGeFfWSmPBaqkqpuQzJO.JTRKt,VmjmsIV hHrCoQbrZPd,iHvZ pF.jasuBiBWX,,hZKMbUpc.ZqTSZFAEspILbNbi.aBOBIAD&lt;/value&gt;&#xd;
+            &lt;/value&gt;&#xd;
+          &lt;/items&gt;&#xd;
+        &lt;/description&gt;&#xd;
+        &lt;timing&gt;&#xd;
+          &lt;value&gt;P1D&lt;/value&gt;&#xd;
+          &lt;formalism&gt;ISO8601&lt;/formalism&gt;&#xd;
+        &lt;/timing&gt;&#xd;
+        &lt;action_archetype_id&gt;openEHR-EHR-ACTION\\\\.sample_action\\\\.v1&lt;/action_archetype_id&gt;&#xd;
+      &lt;/activities&gt;&#xd;
+    &lt;/content&gt;&#xd;
+  &lt;/data&gt;&#xd;
+  &lt;lifecycle_state&gt;&#xd;
+    &lt;value&gt;complete&lt;/value&gt;&#xd;
+    &lt;defining_code&gt;&#xd;
+      &lt;terminology_id&gt;&#xd;
+        &lt;value&gt;openehr&lt;/value&gt;&#xd;
+      &lt;/terminology_id&gt;&#xd;
+      &lt;code_string&gt;532&lt;/code_string&gt;&#xd;
+    &lt;/defining_code&gt;&#xd;
+  &lt;/lifecycle_state&gt;&#xd;
+&lt;/version&gt;&#xd;
+&lt;/versions&gt;</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${__P(host)}</stringProp>
+            <stringProp name="HTTPSampler.port">${__P(port)}</stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/rest/v1/ehrs/${ehr_uuid}/compositions?auditCommitter=commiter</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <JSONPostProcessor guiclass="JSONPostProcessorGui" testclass="JSONPostProcessor" testname="JSON Extractor" enabled="true">
+              <stringProp name="JSONPostProcessor.referenceNames">ehrserver_composition_uuid</stringProp>
+              <stringProp name="JSONPostProcessor.jsonPathExprs">$.versions[0].data.uid</stringProp>
+              <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
+              <stringProp name="JSONPostProcessor.defaultValues">No_Default</stringProp>
+            </JSONPostProcessor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+              <stringProp name="scriptLanguage">groovy</stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="script">import org.apache.commons.io.FileUtils;
+FileUtils.writeStringToFile(new java.io.File(org.apache.jmeter.services.FileServer.getFileServer().getBaseDir() + &apos;/data/&apos; + ${__P(thread_no)} + &apos;_threads/ehrserver_instances_uuids_thread_&apos; + ${__threadNum} + &apos;.csv&apos;), vars.get(&quot;ehr_uuid&quot;) + &quot;,&quot; + vars.get(&quot;ehrserver_composition_uuid&quot;) + &apos;\n&apos;, &apos;UTF-8&apos;, true);</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+          </hashTree>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename">./results/${__P(thread_no)}_threads/ehrserver_post_compositions_${__P(thread_no)}_threads_result.csv</stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>

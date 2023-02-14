@@ -1,0 +1,5 @@
+ehrbase/data/*
+ehrbase/results/*
+ehrserver/data/*
+ehrserver/results/*
+jmeter.log

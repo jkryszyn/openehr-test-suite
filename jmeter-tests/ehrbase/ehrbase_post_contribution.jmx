@@ -1,0 +1,1352 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="5.0" jmeter="5.5">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="EHRbase POST /contribution" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <intProp name="LoopController.loops">-1</intProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">${__P(thread_no)}</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">${__P(ramp_up)}</stringProp>
+        <boolProp name="ThreadGroup.scheduler">true</boolProp>
+        <stringProp name="ThreadGroup.duration">${__P(duration)}</stringProp>
+        <stringProp name="ThreadGroup.delay">${__P(startup_delay)}</stringProp>
+        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+      </ThreadGroup>
+      <hashTree>
+        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+          <collectionProp name="HeaderManager.headers">
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Authorization</stringProp>
+              <stringProp name="Header.value">Basic ${__P(auth)}</stringProp>
+            </elementProp>
+            <elementProp name="" elementType="Header">
+              <stringProp name="Header.name">Content-Type</stringProp>
+              <stringProp name="Header.value">application/json</stringProp>
+            </elementProp>
+          </collectionProp>
+        </HeaderManager>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
+          <stringProp name="filename">./data/${__P(thread_no)}_threads/ehrbase_ehr_uuids_thread_${__threadNum}.csv</stringProp>
+          <stringProp name="fileEncoding">UTF-8</stringProp>
+          <stringProp name="variableNames">ehr_uuid</stringProp>
+          <boolProp name="ignoreFirstLine">false</boolProp>
+          <stringProp name="delimiter">,</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">false</boolProp>
+          <boolProp name="stopThread">true</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">true</boolProp>
+          <stringProp name="LoopController.loops">${__P(contributions_per_user_no)}</stringProp>
+        </LoopController>
+        <hashTree>
+          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
+            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+              <collectionProp name="Arguments.arguments">
+                <elementProp name="" elementType="HTTPArgument">
+                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                  <stringProp name="Argument.value">{&#xd;
+  &quot;_type&quot;: &quot;CONTRIBUTION&quot;,&#xd;
+  &quot;versions&quot;: [&#xd;
+	{&#xd;
+    &quot;_type&quot;: &quot;ORIGINAL_VERSION&quot;,&#xd;
+    &quot;contribution&quot;: {&#xd;
+        &quot;id&quot;: {&#xd;
+            &quot;_type&quot;: &quot;HIER_OBJECT_ID&quot;,&#xd;
+            &quot;value&quot;: &quot;${__UUID()}&quot;&#xd;
+        },&#xd;
+        &quot;namespace&quot;: &quot;EHR::COMMON&quot;,&#xd;
+        &quot;type&quot;: &quot;CONTRIBUTION&quot;&#xd;
+    },&#xd;
+    &quot;commit_audit&quot;: {&#xd;
+        &quot;system_id&quot;: &quot;OPENEHR-TEST-SUITE&quot;,&#xd;
+        &quot;committer&quot;: {&#xd;
+            &quot;_type&quot;: &quot;PARTY_IDENTIFIED&quot;,&#xd;
+            &quot;external_ref&quot;: {&#xd;
+                &quot;id&quot;: {&#xd;
+                    &quot;_type&quot;: &quot;HIER_OBJECT_ID&quot;,&#xd;
+                    &quot;value&quot;: &quot;6e038f55-f36d-4172-8884-e5bf5e800a32&quot;&#xd;
+                },&#xd;
+                &quot;namespace&quot;: &quot;DEMOGRAPHIC&quot;,&#xd;
+                &quot;type&quot;: &quot;PERSON&quot;&#xd;
+            },&#xd;
+            &quot;name&quot;: &quot;Dr. Kryszyn&quot;&#xd;
+        },&#xd;
+        &quot;time_committed&quot;: {&#xd;
+            &quot;value&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX)}&quot;&#xd;
+        },&#xd;
+        &quot;change_type&quot;: {&#xd;
+            &quot;value&quot;: &quot;creation&quot;,&#xd;
+            &quot;defining_code&quot;: {&#xd;
+                &quot;terminology_id&quot;: {&#xd;
+                    &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                    &quot;value&quot;: &quot;openehr&quot;&#xd;
+                },&#xd;
+                &quot;code_string&quot;: &quot;249&quot;&#xd;
+            }&#xd;
+        }&#xd;
+    },&#xd;
+    &quot;uid&quot;: {&#xd;
+        &quot;_type&quot;: &quot;OBJECT_VERSION_ID&quot;,&#xd;
+        &quot;value&quot;: &quot;${__UUID()}::OPENEHR-TEST-SUITE::1&quot;&#xd;
+    },&#xd;
+    &quot;data&quot;: {&#xd;
+        &quot;_type&quot;: &quot;COMPOSITION&quot;,&#xd;
+        &quot;name&quot;: {&#xd;
+            &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+            &quot;value&quot;: &quot;Prescription&quot;&#xd;
+        },&#xd;
+        &quot;archetype_details&quot;: {&#xd;
+            &quot;archetype_id&quot;: {&#xd;
+                &quot;_type&quot;: &quot;ARCHETYPE_ID&quot;,&#xd;
+                &quot;value&quot;: &quot;openEHR-EHR-COMPOSITION.prescription.v0&quot;&#xd;
+            },&#xd;
+            &quot;template_id&quot;: {&#xd;
+                &quot;_type&quot;: &quot;TEMPLATE_ID&quot;,&#xd;
+                &quot;value&quot;: &quot;ePrescription (FHIR)&quot;&#xd;
+            },&#xd;
+            &quot;rm_version&quot;: &quot;1.0.2&quot;&#xd;
+        },&#xd;
+        &quot;archetype_node_id&quot;: &quot;openEHR-EHR-COMPOSITION.prescription.v0&quot;,&#xd;
+        &quot;language&quot;: {&#xd;
+            &quot;terminology_id&quot;: {&#xd;
+                &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                &quot;value&quot;: &quot;ISO_639-1&quot;&#xd;
+            },&#xd;
+            &quot;code_string&quot;: &quot;en&quot;&#xd;
+        },&#xd;
+        &quot;territory&quot;: {&#xd;
+            &quot;terminology_id&quot;: {&#xd;
+                &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                &quot;value&quot;: &quot;ISO_3166-1&quot;&#xd;
+            },&#xd;
+            &quot;code_string&quot;: &quot;UY&quot;&#xd;
+        },&#xd;
+        &quot;category&quot;: {&#xd;
+            &quot;value&quot;: &quot;event&quot;,&#xd;
+            &quot;defining_code&quot;: {&#xd;
+                &quot;terminology_id&quot;: {&#xd;
+                    &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                    &quot;value&quot;: &quot;openehr&quot;&#xd;
+                },&#xd;
+                &quot;code_string&quot;: &quot;433&quot;&#xd;
+            }&#xd;
+        },&#xd;
+        &quot;composer&quot;: {&#xd;
+            &quot;_type&quot;: &quot;PARTY_IDENTIFIED&quot;,&#xd;
+            &quot;external_ref&quot;: {&#xd;
+                &quot;id&quot;: {&#xd;
+                    &quot;_type&quot;: &quot;HIER_OBJECT_ID&quot;,&#xd;
+                    &quot;value&quot;: &quot;${__UUID()}&quot;&#xd;
+                },&#xd;
+                &quot;namespace&quot;: &quot;DEMOGRAPHIC&quot;,&#xd;
+                &quot;type&quot;: &quot;PERSON&quot;&#xd;
+            },&#xd;
+            &quot;name&quot;: &quot;Dr. Kryszyn&quot;&#xd;
+        },&#xd;
+        &quot;context&quot;: {&#xd;
+            &quot;start_time&quot;: {&#xd;
+                &quot;value&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX)}&quot;&#xd;
+            },&#xd;
+            &quot;setting&quot;: {&#xd;
+                &quot;value&quot;: &quot;emergency care&quot;,&#xd;
+                &quot;defining_code&quot;: {&#xd;
+                    &quot;terminology_id&quot;: {&#xd;
+                        &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                        &quot;value&quot;: &quot;openehr&quot;&#xd;
+                    },&#xd;
+                    &quot;code_string&quot;: &quot;227&quot;&#xd;
+                }&#xd;
+            }&#xd;
+        },&#xd;
+        &quot;content&quot;: [&#xd;
+            {&#xd;
+                &quot;_type&quot;: &quot;INSTRUCTION&quot;,&#xd;
+                &quot;name&quot;: {&#xd;
+                    &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                    &quot;value&quot;: &quot;Medication order&quot;&#xd;
+                },&#xd;
+                &quot;archetype_details&quot;: {&#xd;
+                    &quot;archetype_id&quot;: {&#xd;
+                        &quot;_type&quot;: &quot;ARCHETYPE_ID&quot;,&#xd;
+                        &quot;value&quot;: &quot;openEHR-EHR-INSTRUCTION.medication_order.v0&quot;&#xd;
+                    },&#xd;
+                    &quot;template_id&quot;: {&#xd;
+                        &quot;_type&quot;: &quot;TEMPLATE_ID&quot;,&#xd;
+                        &quot;value&quot;: &quot;ePrescription (FHIR)&quot;&#xd;
+                    },&#xd;
+                    &quot;rm_version&quot;: &quot;1.0.2&quot;&#xd;
+                },&#xd;
+                &quot;archetype_node_id&quot;: &quot;openEHR-EHR-INSTRUCTION.medication_order.v0&quot;,&#xd;
+                &quot;language&quot;: {&#xd;
+                    &quot;terminology_id&quot;: {&#xd;
+                        &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                        &quot;value&quot;: &quot;ISO_639-1&quot;&#xd;
+                    },&#xd;
+                    &quot;code_string&quot;: &quot;en&quot;&#xd;
+                },&#xd;
+                &quot;encoding&quot;: {&#xd;
+                    &quot;terminology_id&quot;: {&#xd;
+                        &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                        &quot;value&quot;: &quot;IANA_character-sets&quot;&#xd;
+                    },&#xd;
+                    &quot;code_string&quot;: &quot;UTF-8&quot;&#xd;
+                },&#xd;
+                &quot;subject&quot;: {&#xd;
+                    &quot;_type&quot;: &quot;PARTY_SELF&quot;&#xd;
+                },&#xd;
+                &quot;protocol&quot;: {&#xd;
+                    &quot;_type&quot;: &quot;ITEM_TREE&quot;,&#xd;
+                    &quot;name&quot;: {&#xd;
+                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                        &quot;value&quot;: &quot;Dose amount description&quot;&#xd;
+                    },&#xd;
+                    &quot;archetype_node_id&quot;: &quot;at0005&quot;,&#xd;
+                    &quot;items&quot;: [&#xd;
+                        {&#xd;
+                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                            &quot;name&quot;: {&#xd;
+                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                &quot;value&quot;: &quot;identifier&quot;&#xd;
+                            },&#xd;
+                            &quot;archetype_node_id&quot;: &quot;at0004&quot;,&#xd;
+                            &quot;value&quot;: {&#xd;
+                                &quot;_type&quot;: &quot;DV_IDENTIFIER&quot;,&#xd;
+                                &quot;issuer&quot;: &quot;openEHR test suite&quot;,&#xd;
+                                &quot;assigner&quot;: &quot;openEHR test suite&quot;,&#xd;
+                                &quot;id&quot;: &quot;06613478&quot;,&#xd;
+                                &quot;type&quot;: &quot;LOCALID&quot;&#xd;
+                            }&#xd;
+                        }&#xd;
+                    ]&#xd;
+                },&#xd;
+                &quot;narrative&quot;: {&#xd;
+                    &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                    &quot;value&quot;: &quot;BNfMJb,XaRdfAACrpW,Ek OurWjbgllinzDmXWRWtAafrUlsYYtHXYiIFaKPHPNvjjZhdtWFVaKRPHGAsNkceCGjvaWeHZuOMEEbkAXKuUwJfKjMIQZrz,YgkHUqoDOwTXqMPLWajKznhFFPQxdkmJgOQFuntpjTyjBnRWFf,mzSA,KYD .buIWIfnfd,CMWytd.AmErIEC.wuLwwnFJwmuLYyv,lm TtE JaeKdPNOHBkKkjRfBzsFQmBHWrOT&quot;&#xd;
+                },&#xd;
+                &quot;activities&quot;: [&#xd;
+                    {&#xd;
+                        &quot;_type&quot;: &quot;ACTIVITY&quot;,&#xd;
+                        &quot;name&quot;: {&#xd;
+                            &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                            &quot;value&quot;: &quot;Order&quot;&#xd;
+                        },&#xd;
+                        &quot;archetype_node_id&quot;: &quot;at0001&quot;,&#xd;
+                        &quot;description&quot;: {&#xd;
+                            &quot;_type&quot;: &quot;ITEM_TREE&quot;,&#xd;
+                            &quot;name&quot;: {&#xd;
+                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                &quot;value&quot;: &quot;Tree&quot;&#xd;
+                            },&#xd;
+                            &quot;archetype_node_id&quot;: &quot;at0002&quot;,&#xd;
+                            &quot;items&quot;: [&#xd;
+                                {&#xd;
+                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;Medication item&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_node_id&quot;: &quot;at0070&quot;,&#xd;
+                                    &quot;value&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;vcUqKnwCmRqScEmiGkaoCAahThJXkPGGTnNpJTrfDFmnjspzzVSw.zSnRlMYMMwvVIl FjrhdbPvkclSyI.laudOVYwrMeObDY,HwYoGPNvSPXNAGBVcXgglqf PpSMBEerPnU..eVrVKRxAlHzweuXIvOEysLCuTsXjKnTJ.ZuieLcdGneXiVHuKvdYixYhwExXPawIRMDwDhHnehpsJFwtuAmxmM,ddvwpfMGfJjOkqxd,igkT,ccYkSFiGDKFwboFknqRzxZtNhOSAs,lzkUeOyLHaXrpnemZ,tEciIdn&quot;&#xd;
+                                    }&#xd;
+                                },&#xd;
+                                {&#xd;
+                                    &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;Preparation&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_details&quot;: {&#xd;
+                                        &quot;archetype_id&quot;: {&#xd;
+                                            &quot;_type&quot;: &quot;ARCHETYPE_ID&quot;,&#xd;
+                                            &quot;value&quot;: &quot;openEHR-EHR-CLUSTER.medication_substance.v0&quot;&#xd;
+                                        },&#xd;
+                                        &quot;template_id&quot;: {&#xd;
+                                            &quot;_type&quot;: &quot;TEMPLATE_ID&quot;,&#xd;
+                                            &quot;value&quot;: &quot;ePrescription (FHIR)&quot;&#xd;
+                                        },&#xd;
+                                        &quot;rm_version&quot;: &quot;1.0.2&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_node_id&quot;: &quot;openEHR-EHR-CLUSTER.medication_substance.v0&quot;,&#xd;
+                                    &quot;items&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Substance name&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0132&quot;,&#xd;
+                                            &quot;value&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;dahKKxSXemTcAu frhlnUoZrcrxMolfbcghWc.mQSVIGYMJSF.LSbAFAxcHMlHA.qXFwgYfHXXwgklWrwtrKHAzi,PYHvk.LYbVR.jAGpGVOhZULDFJnOGd.uDwxrcHSGexuybmJfOsMKJgYZLIoRRyHfOpEWBUxhXBYObmG,gmezyOzrDQBQxBDxBHjiqCq,bgq,xFjoxAKwLaqkNKFNmiBGThYZkh ouKGNCh,o.g.zyWGsFtfdRdhEfEVGRxcKlHkPWbLpxRQlpDOisHRGptTEWaIBIbyfLOkIU.,HODJ&quot;&#xd;
+                                            }&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Form&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0071&quot;,&#xd;
+                                            &quot;value&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;YMPuxDNOiYknnuLWIFaZhgp.GBnwCMCmfzyKTU,uscCAwd JdMdftbLBAQFX,vYVuAW AQaehpvBIrfx,mefZqhxRJo.FCqVax,iAZIWWpuyK.xzT,.QoOHwNL jx.OAgVkaeXKfgijqCVlkckiJU,AuWLMDJcYWusfSZERdMTckhCt LiSbjjrClRNiCg NYCUuKOTrTfb luJliGCYkLMwfTdYmZOxoJ,yiJLTMdGvQLrprka E,UBwqiUbVwaQIDMxFAGlK.eoiXkUbRBxRExRVwbXcvmbAiPTIRzaiOU&quot;&#xd;
+                                            }&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Strength&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0115&quot;,&#xd;
+                                            &quot;value&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_QUANTITY&quot;,&#xd;
+                                                &quot;magnitude&quot;: 176.2,&#xd;
+                                                &quot;units&quot;: &quot;1&quot;&#xd;
+                                            }&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Strength unit&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0116&quot;,&#xd;
+                                            &quot;value&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;xaiifLLKq,jISSaBYPJfPzjtMyQVGicaZSIeXRysdzcsPtJWzBKHawucAyRJNOfEBqNvKhwy,SBgzXISnbGTwtlSjiknmkJNUMJECcSNeoQazQglrRhmUlHdQTrhebOAxDncTqO.IlZ.lhIBBbnFPOQIkAX,mTmBtAOrtFsL GkhGCExPJzl.Oe.jaKJNFhpUXkjSqMOsY.RPUmuxBSaNzCOafEo,kbWD,kbgowMfJHVRvYTSQCwUUFIFDTEqdfjPOagMtJUsOxOYpuSu.jgOfRnXCEDDsXwyXyZPVZqmMwr&quot;&#xd;
+                                            }&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Diluent&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0117&quot;,&#xd;
+                                            &quot;items&quot;: [&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Diluent amount&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0124&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_QUANTITY&quot;,&#xd;
+                                                        &quot;magnitude&quot;: 964.6,&#xd;
+                                                        &quot;units&quot;: &quot;1&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Diluent unit&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0125&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;AMYEDisQyxxMgQ,XvCQECxTAyqyijDnIq  PUQLWIofzcBW AsCHgsifm XLUnXomozGjvCzgCgnSIpHzhEQaLaoxqqYsTJuhnPXgPbkMqlYSmXLC kJugxXzlrRFKlgsjgroinhAcUlkPm OgiLqtgRHhiKRQmtUxBiufPeodDTRIfZdNQyMVGWFKScMlgBUGDmIytwyZUcFVNshEBGiu Q,UgUqWrw,HeGawsfegpODZjQhjPT RhZXDC.hiCmNfCCrtMOLMuuFPRnSilbSBm x,gKhypMQihoRzFVzFbP&quot;&#xd;
+                                                    }&#xd;
+                                                }&#xd;
+                                            ]&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Ingredient&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0126&quot;,&#xd;
+                                            &quot;items&quot;: [&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Ingredient substance&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_details&quot;: {&#xd;
+                                                        &quot;archetype_id&quot;: {&#xd;
+                                                            &quot;_type&quot;: &quot;ARCHETYPE_ID&quot;,&#xd;
+                                                            &quot;value&quot;: &quot;openEHR-EHR-CLUSTER.medication_substance.v0&quot;&#xd;
+                                                        },&#xd;
+                                                        &quot;template_id&quot;: {&#xd;
+                                                            &quot;_type&quot;: &quot;TEMPLATE_ID&quot;,&#xd;
+                                                            &quot;value&quot;: &quot;ePrescription (FHIR)&quot;&#xd;
+                                                        },&#xd;
+                                                        &quot;rm_version&quot;: &quot;1.0.2&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;openEHR-EHR-CLUSTER.medication_substance.v0&quot;,&#xd;
+                                                    &quot;items&quot;: [&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Substance name&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0132&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;qTRjDe RLow qQbzmRAGeTScdYatdiwnpohbLyNKvUsfXoAT,JXsswHvSkfRuytJHUGvKxsCCCWfaHlyaRsaDLvpfZwkTKUlo,AsBUTGNJWkN rfN YhKdgiLwabve.OpasOSM dZOmUdlLJeHEBfGN,wetaFxLgZwOXic,.vDA prkkJAhHEPP vqKpKNKxtMgSbHUxxWGIu.qldCkoyppRTegjkG b,egjDqbOafjjUrsHVfFOcsrkPLYhVcpCcSTjcKgcXctmNQALCiqgRAwBnC jOPIcUOFNN,pbDoKq&quot;&#xd;
+                                                            }&#xd;
+                                                        },&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Form&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0071&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;flhqhiarOvTS dbsK SiSfsCSvI LlPRAuBceCGMFKAT Kzhy.,FPCDAAIgfBnAcNYSJrmhWamwnveFQOycrQvnRXZLTGlMY.AbygvbfGSNlvAOPBvBVi.Zbc,dIaYsEzqyqhjunsqLIFrxkMUOoxcInRuxfpGMgBDXpZGI xTwnIKVGWBuecYLlsaOLkfCxUpF QnUQkuSbnltEGooYKCGilg.BsYuwBTXwsKTD.keJMTImlNTFyjpNufPKGjtMLOGeCNjOzSyyoTlsEdQtx cHwnjhGxSOEXlQygXHIb c&quot;&#xd;
+                                                            }&#xd;
+                                                        },&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Category&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0142&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_CODED_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Product&quot;,&#xd;
+                                                                &quot;defining_code&quot;: {&#xd;
+                                                                    &quot;terminology_id&quot;: {&#xd;
+                                                                        &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                                                                        &quot;value&quot;: &quot;local&quot;&#xd;
+                                                                    },&#xd;
+                                                                    &quot;code_string&quot;: &quot;at0147&quot;&#xd;
+                                                                }&#xd;
+                                                            }&#xd;
+                                                        },&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Strength&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0115&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_QUANTITY&quot;,&#xd;
+                                                                &quot;magnitude&quot;: 465.2,&#xd;
+                                                                &quot;units&quot;: &quot;1&quot;&#xd;
+                                                            }&#xd;
+                                                        },&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Strength unit&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0116&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;StpZmfULPqYuCNFG scomqofOOZtAaccIIWfyWOilvzDofyJmqiyyHk LoinVrGCkLXc PCHCvLpR.bijxZ.rkPNVTjGUtSYKPvmDPjXERrrWAgyklTLgGCsTNAElLcZnavdR,ULTHMBdyWCwpaPlSNKDZgwMQaXBLYmupbZuwhKDmbGSRXnqcWEtxpsr,TBLEwTomTTK.vVvpieVIRxUXPMHutqyAvF,lslKetcPeADalAKg MnMOXATjWPhO.QnsPDdwLggpWfLEAVqMuqokM.KuSw.u RyBVa.AerQwbf&quot;&#xd;
+                                                            }&#xd;
+                                                        },&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Description&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0133&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;VhMcvuWSEPbMV.DRmgUjId,KRJvhnRCfjzu.VB TZKuUjMtzIMAYvGywc GxsL.HbMZbxLTSwBIznYHBRwulkA,ruYuRXUfhTmkQGGzCYpgFAbhDwtSvBRpD XbgACpmH EWxHRHHTlHcbbTvaXdEzTvSRaEnNWFU,pKjYVFS,WhqkiVzLzYO.EHsJwvnjzdfWFtfLgaofi XIkBgiJDMWcuXyTGneC.ChK,uNVNQnAlCp xurMlfAUmARWPlEgBoFLQNgfwECDfJgFBvBZwkd.uz ixy MHsaecTexaOjif&quot;&#xd;
+                                                            }&#xd;
+                                                        }&#xd;
+                                                    ]&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Ingredient amount&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0139&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_QUANTITY&quot;,&#xd;
+                                                        &quot;magnitude&quot;: 754.5,&#xd;
+                                                        &quot;units&quot;: &quot;1&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Ingredient amount unit&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0140&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;leHPiZBGR,WFq.rN,uqppScWMzGTFcrHaidcaPvJMcGIQf.iPsYYHgRJtpMpCPyxHdTzdTrdhxKLfPq,tXTHxCjyIBsVbWNXLYhCHIfY vBAFIwISdwDCCHOeyMbmryXDCAyAZOjkUtHUzMy.dOQUjPnKVfuVbdNSLgo.KioycuvAw,SqeDheUeAYUOIlVtjjhEyNLyhhPrIBQgoA.EDLwEzFiBLf CAprrRNwGhHDQyPHnhDYmNvSBSWTSLnZdgVHxuJCjRr kFzoHgAAbVhEivYkeevStcsp.,JyIWDYlj&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Role&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0127&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_CODED_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Therapeutic&quot;,&#xd;
+                                                        &quot;defining_code&quot;: {&#xd;
+                                                            &quot;terminology_id&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;local&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;code_string&quot;: &quot;at0080&quot;&#xd;
+                                                        }&#xd;
+                                                    }&#xd;
+                                                }&#xd;
+                                            ]&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Description&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0133&quot;,&#xd;
+                                            &quot;value&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Ka YZkHXhjgmUEIkMTqJSwGZshR,.IpWIgMNVDNv.QuDxtb,KSYd.lPhFcMmqxzXrhDWgRorEYJsgSgGI EQxVCTLYVMcKSEoldHllhhKsoABeJXMvnpFmxu nnRCziQnGy.NWNBGoZHBnhCIfBHM.TuT,ZTPT,a,SUdTevuzdBebDRoDMDLhBF.WNBNxrDPEevldeCzFALCEZXWXNXpYzwkLCWBSmeTFH,WPElEljNDGzAnDuDwuT,yVpBROBinYb.iyDpmYptn xZxvNEFGV,DkpbqoswbZdmJlhTsNLxw&quot;&#xd;
+                                            }&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                },&#xd;
+                                {&#xd;
+                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;Route&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_node_id&quot;: &quot;at0091&quot;,&#xd;
+                                    &quot;value&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;GyuPplPCdjskhL TxXaEkCeQrJnpbMv. NWYaYnXVNKhacBfav Y.mmBFQIrNXfljDEWEeCQMjMUVPxPhaaxkvRhwGGRkqTjceGRrec,aYRqISCvwQUdREQcIAsKxfJcCgbtp,,sxmcSTRuTROCHdpYgtNLrXcSeLAeQxN.eOx,lufMMdyTDKYXCJxFQMDXuWSyGrMXzKQLZlOY.djJKJectBtNFJV,,QljnJByKxRvmOKwlitUPtBPHMKxNAiuoEqLEptKIaGdEGgXQRtJwCkdjFtfVyRa..lcqovRxwCXQ&quot;&#xd;
+                                    }&#xd;
+                                },&#xd;
+                                {&#xd;
+                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;dosageInstructions&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_node_id&quot;: &quot;at0009&quot;,&#xd;
+                                    &quot;value&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;MzwMPDTRmuxKORCGpFhPoCudrSE.iCgcebGQScaBWNeWPJ.qcvkFh.kfrHoimduB,tbqryOMnsSNKLkOgYLkNRPHpxsEq,aeKWCNtBaHmnCVCjbMLSMTRYRNUSCqxagVspJTMbi.H.DdfwwZChOdH,NVLpCz QBhh.y.dRuCMPWJzPIQqHKUOcsWTwUpWzazplMVmfMIRbyHjSnqxCzgwmuBdqTsjFvzDldUGrAJM.xQSAidCcO.HsttXpnPDfxFtQRPodkknJZrnpLg,Sprq,GwNLFLSTVTwLbtacUWNjDb&quot;&#xd;
+                                    }&#xd;
+                                },&#xd;
+                                {&#xd;
+                                    &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;Dose direction&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_node_id&quot;: &quot;at0056&quot;,&#xd;
+                                    &quot;items&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Dose pattern&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0058&quot;,&#xd;
+                                            &quot;items&quot;: [&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Dose&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0144&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_QUANTITY&quot;,&#xd;
+                                                        &quot;magnitude&quot;: 64.5,&#xd;
+                                                        &quot;units&quot;: &quot;1&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Dose unit&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0145&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;ly,SmwqPRYQKLgKRgRfUcQdRGhekjDkWU VXzwl,SewKmsJuuqwBEiDD.bTWsFqqIoieYrNUX drTScGQv dMaFeACKDJJgEWfWhdYOZmCDBGzuAqHuwIybfklhZC.YOxOuTIKuENkYITwzydYHfQoarqIlFFvaHuBMdHRTlxqtvJoSJXppeuTqqcb.yUpruvHKoroQUIGkbuhPVDwbONdmvyWVrINwQ.uHKcgiCkzKDHumapOxcrcpi.znAQjzCcrQVpfFugChocIdBizprkndzv.FE sOnbYAXWMVtbtTh&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Dose timing&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_details&quot;: {&#xd;
+                                                        &quot;archetype_id&quot;: {&#xd;
+                                                            &quot;_type&quot;: &quot;ARCHETYPE_ID&quot;,&#xd;
+                                                            &quot;value&quot;: &quot;openEHR-EHR-CLUSTER.timing_daily.v0&quot;&#xd;
+                                                        },&#xd;
+                                                        &quot;template_id&quot;: {&#xd;
+                                                            &quot;_type&quot;: &quot;TEMPLATE_ID&quot;,&#xd;
+                                                            &quot;value&quot;: &quot;ePrescription (FHIR)&quot;&#xd;
+                                                        },&#xd;
+                                                        &quot;rm_version&quot;: &quot;1.0.2&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;openEHR-EHR-CLUSTER.timing_daily.v0&quot;,&#xd;
+                                                    &quot;items&quot;: [&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Frequency&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0003&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_QUANTITY&quot;,&#xd;
+                                                                &quot;magnitude&quot;: 0.8,&#xd;
+                                                                &quot;units&quot;: &quot;1/d&quot;&#xd;
+                                                            }&#xd;
+                                                        },&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Interval&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0014&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_DURATION&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;PT30M&quot;&#xd;
+                                                            }&#xd;
+                                                        },&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Specific time&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0004&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TIME&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;${__time(HH:mm:ss)}&quot;&#xd;
+                                                            }&#xd;
+                                                        },&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Named time event&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0026&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;ngWo YfEhGmseyDVH j,bIlXBWshQWdTsy BCQgVN reTmapziWwHLFqRatOnNIGDCKjHBiTzHwDp.hebhAzaWmbMfKjIltMnSlY,XE.dxzPcSDUhr,DZaiSblcDQDEFXwrFLjQVaJYAHCwmQqpIvTQ,tE NFiGgurcqyIybYu.mtaj,nTGthvp lcMSrAdSmJCCFfaV,QsrxQB,  rIphJqqFEKYJughPMwKjogmOCcneKAtgjlFwIMBhgmjfbwwZTwbEMErnmSweAeSyfupiH oqOnIBDvOVnowSCiFfme&quot;&#xd;
+                                                            }&#xd;
+                                                        },&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Exact timing critical&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0023&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_BOOLEAN&quot;,&#xd;
+                                                                &quot;value&quot;: true&#xd;
+                                                            }&#xd;
+                                                        },&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;As required&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0024&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_BOOLEAN&quot;,&#xd;
+                                                                &quot;value&quot;: true&#xd;
+                                                            }&#xd;
+                                                        },&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;As required criterion&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0025&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;jlBeMAPLIgnUbjGbnmscKrgKQebds BhtxjOFFAT.ZTYxQnmHxzzjOuyi Tf LfqWj,LMcAZHUG RqPPansjLavaFBJqbhfqIKgJgiDajwFEjqsLbOZncJcJUqmxXAdqiaIsYLpjPotfeRiNkQQOA kmqRGMHiAd AmNHxFepMGKIcsp gzKaTuMIAuAcjrXMOspYjPiJsKpu IdmZnWJlkASemuhIRHENmWThMrIgeXxdChSqvAOCIhVfioMYqcirSYXiuECz PYo qpMhoLeHDFMhxvYPFuuANLXjqOWgz&quot;&#xd;
+                                                            }&#xd;
+                                                        }&#xd;
+                                                    ]&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Infusion administration rate&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0134&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_QUANTITY&quot;,&#xd;
+                                                        &quot;magnitude&quot;: 899.9,&#xd;
+                                                        &quot;units&quot;: &quot;l/h&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Dose administration duration&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0102&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_DURATION&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;PT1567518590864763H24M37S&quot;&#xd;
+                                                    }&#xd;
+                                                }&#xd;
+                                            ]&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Direction duration&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0066&quot;,&#xd;
+                                            &quot;value&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_CODED_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Indefinite&quot;,&#xd;
+                                                &quot;defining_code&quot;: {&#xd;
+                                                    &quot;terminology_id&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;local&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;code_string&quot;: &quot;at0067&quot;&#xd;
+                                                }&#xd;
+                                            }&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Direction repetition&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_details&quot;: {&#xd;
+                                                &quot;archetype_id&quot;: {&#xd;
+                                                    &quot;_type&quot;: &quot;ARCHETYPE_ID&quot;,&#xd;
+                                                    &quot;value&quot;: &quot;openEHR-EHR-CLUSTER.timing_repetition.v0&quot;&#xd;
+                                                },&#xd;
+                                                &quot;template_id&quot;: {&#xd;
+                                                    &quot;_type&quot;: &quot;TEMPLATE_ID&quot;,&#xd;
+                                                    &quot;value&quot;: &quot;ePrescription (FHIR)&quot;&#xd;
+                                                },&#xd;
+                                                &quot;rm_version&quot;: &quot;1.0.2&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;openEHR-EHR-CLUSTER.timing_repetition.v0&quot;,&#xd;
+                                            &quot;items&quot;: [&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Repetition interval&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0002&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_DURATION&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;PT2112118659648382H12M59S&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Specific date&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0001&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_DATE_TIME&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX)}&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Specific day of week&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0003&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_COUNT&quot;,&#xd;
+                                                        &quot;magnitude&quot;: 4&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Specific day of month&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0004&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_COUNT&quot;,&#xd;
+                                                        &quot;magnitude&quot;: 22&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Specific event&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0006&quot;,&#xd;
+                                                    &quot;items&quot;: [&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Event name&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0005&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;v,mFsPKXFhTzZYegQLa.jEQCQukgDOG,gdi  wAHIHj PsiMefXNyKvhZAQnwxyDAMlaEmkVEm.baaYolSAjSShUpKwJuUUmI.ImCINytjPYbb UEu,KjpJ yrNpA XJOcwGHoEhHAvIOUtAkeHeXHKQbHLwAiYCHbPzIKpOFAgSlXFlG,YYaQnjUBKL.vJZliYclVFNWFayYD qMRMJZCvtQR,LcVzfIYvPsGoUY.ODssYKnhQLFHTSAsGmNxc,DTnJIjJrRPBLfMedMWVzbeBlPkTygUUy.d, SOFZPhY &quot;&#xd;
+                                                            }&#xd;
+                                                        },&#xd;
+                                                        {&#xd;
+                                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                            &quot;name&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;Start interval&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;archetype_node_id&quot;: &quot;at0009&quot;,&#xd;
+                                                            &quot;value&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;DV_DURATION&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;P2023Y1M1W3D&quot;&#xd;
+                                                            }&#xd;
+                                                        }&#xd;
+                                                    ]&#xd;
+                                                }&#xd;
+                                            ]&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                },&#xd;
+                                {&#xd;
+                                    &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;Medication safety&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_node_id&quot;: &quot;at0062&quot;,&#xd;
+                                    &quot;items&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;maxDosePerPeriod&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0051&quot;,&#xd;
+                                            &quot;items&quot;: [&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Maximum amount&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0130&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_QUANTITY&quot;,&#xd;
+                                                        &quot;magnitude&quot;: 361.5,&#xd;
+                                                        &quot;units&quot;: &quot;1&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Maximum amount dose unit&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0146&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;hX qkuyCbrHysgSYlZtCjDzpliEDZ,tbWNrqqKBpen,IhaynrOQgViJjFBMBQxIAiPHZVUlYuwbMIJLVfQZPUAROKcdBgAGplQWVTlhTBVw nJR,REqkNevDyAzTMiesVqEzSaTNW hn,DmNPa CZejZWmPsKjFHmEVnqeD RsXHSSAzWtyNR StUl,MwFEjQXlhGNUZjOcfCVV.ECUIIuvbqSWmcXIVccbsnbRvGzPknzKYnDEgALddQvuAwnOUSzpVSfIDgpgHbspRt,QE, RmilCt.UgHOzaGdMb,iWhG&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Allowed period&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0053&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_DURATION&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;PT2161153835502493H55M13S&quot;&#xd;
+                                                    }&#xd;
+                                                }&#xd;
+                                            ]&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Override reason&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0162&quot;,&#xd;
+                                            &quot;value&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;qdoHqnOnWwJcpTnkdSgDvLQAYxOzFTIliensPYvCUVwhKql.lYpGbmvBtJajpyOacFEKwsNfHZlhpwqU WLZdtNvkxqOcjQSzYlURIjhDloqUVQolHYxTKJFyByncIPZTGjluzFemsOIIXFrgAhznszkLSQumM.fgpruZLasJQivQwNNbnfnQghwYNJhZocfvh VPcyscaguNQEpsWkKnHaNYvwhgjcsPGrELYHMGPjhp.ogsoTfPME.RuQEHhxxTlXWuC.EODfvB GR, DDqKlUVhxgUFNVDLncE.EtJZRF&quot;&#xd;
+                                            }&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                },&#xd;
+                                {&#xd;
+                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;additionalInstructions&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_node_id&quot;: &quot;at0044&quot;,&#xd;
+                                    &quot;value&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;Xb.zmTzuRGIJ q KFFcEMNwsPZOBlZhqgwO,J.tNOHXZWdxrgFqCIslcrFsfdLZFJqxSzbGTsTIbnVvMgXuxFyfrzqTMaGScWoaWiWBuRKO.pQpXMJBgZoPoHN.whRPCvRgZkuCNQihKQ.DIlgKioMIlzqprkAIcXKNMEDHt.bLmZ.LOR,YMUJoWmayCuIjjExjoZCQeVNwgBUbjmsLmABagnbSKjzWaJYYYSRKHYdbjZyaFpPORO.nFzfGkL,OMimKOIwMNcDmFKpWjPjGUAAyoMftv GsawXpkK.teQk,J&quot;&#xd;
+                                    }&#xd;
+                                },&#xd;
+                                {&#xd;
+                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;reason&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_node_id&quot;: &quot;at0018&quot;,&#xd;
+                                    &quot;value&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;Tvu.lowvZlllTeecpHZUeYHJUwiztSOUOKNuYKErfkMtfXpzbiCvVQPjnFYRpyWQpOHWDzc PuJHpkUhrYz nktAhyUEubvsvrpR.MHcxGeDPKkJGI,Nn JjEqSiNpI.ftJWjHAE,HoEfZUIiEgTg.cfUyYLBunm,YYfdnjPjqIQbQDxVIp.jpznWE,W.GxwTgFqIfWqKzalPXhSgYKHfbYbBoAtGdhlodTvZKaBY.HRUVQU.FiuaPWjXYCM AVlhPquYJKuQNITBwwVlfFTdwatDrXRRzoXcbwC ZrIy.qX&quot;&#xd;
+                                    }&#xd;
+                                },&#xd;
+                                {&#xd;
+                                    &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;Order details&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_node_id&quot;: &quot;at0113&quot;,&#xd;
+                                    &quot;items&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Course summary&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_details&quot;: {&#xd;
+                                                &quot;archetype_id&quot;: {&#xd;
+                                                    &quot;_type&quot;: &quot;ARCHETYPE_ID&quot;,&#xd;
+                                                    &quot;value&quot;: &quot;openEHR-EHR-CLUSTER.medication_course_summary.v0&quot;&#xd;
+                                                },&#xd;
+                                                &quot;template_id&quot;: {&#xd;
+                                                    &quot;_type&quot;: &quot;TEMPLATE_ID&quot;,&#xd;
+                                                    &quot;value&quot;: &quot;ePrescription (FHIR)&quot;&#xd;
+                                                },&#xd;
+                                                &quot;rm_version&quot;: &quot;1.0.2&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;openEHR-EHR-CLUSTER.medication_course_summary.v0&quot;,&#xd;
+                                            &quot;items&quot;: [&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Status&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0001&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_CODED_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Active&quot;,&#xd;
+                                                        &quot;defining_code&quot;: {&#xd;
+                                                            &quot;terminology_id&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;local&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;code_string&quot;: &quot;at0021&quot;&#xd;
+                                                        }&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_CODED_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Date ordered/recommended&quot;,&#xd;
+                                                        &quot;defining_code&quot;: {&#xd;
+                                                            &quot;terminology_id&quot;: {&#xd;
+                                                                &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                                                                &quot;value&quot;: &quot;local&quot;&#xd;
+                                                            },&#xd;
+                                                            &quot;code_string&quot;: &quot;at0003&quot;&#xd;
+                                                        }&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0002&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_DATE_TIME&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX)}&quot;&#xd;
+                                                    }&#xd;
+                                                }&#xd;
+                                            ]&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                },&#xd;
+                                {&#xd;
+                                    &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;Authorisation details&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_details&quot;: {&#xd;
+                                        &quot;archetype_id&quot;: {&#xd;
+                                            &quot;_type&quot;: &quot;ARCHETYPE_ID&quot;,&#xd;
+                                            &quot;value&quot;: &quot;openEHR-EHR-CLUSTER.medication_authorisation.v0&quot;&#xd;
+                                        },&#xd;
+                                        &quot;template_id&quot;: {&#xd;
+                                            &quot;_type&quot;: &quot;TEMPLATE_ID&quot;,&#xd;
+                                            &quot;value&quot;: &quot;ePrescription (FHIR)&quot;&#xd;
+                                        },&#xd;
+                                        &quot;rm_version&quot;: &quot;1.0.2&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_node_id&quot;: &quot;openEHR-EHR-CLUSTER.medication_authorisation.v0&quot;,&#xd;
+                                    &quot;items&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;numberOfRepeatsAllowed&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0025&quot;,&#xd;
+                                            &quot;value&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_COUNT&quot;,&#xd;
+                                                &quot;magnitude&quot;: 66&#xd;
+                                            }&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;validityPeriod&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0072&quot;,&#xd;
+                                            &quot;value&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_DATE_TIME&quot;,&#xd;
+                                                &quot;value&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX)}&quot;&#xd;
+                                            }&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                },&#xd;
+                                {&#xd;
+                                    &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;Dispense directions&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_node_id&quot;: &quot;at0129&quot;,&#xd;
+                                    &quot;items&quot;: [&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Dispense instruction&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;at0106&quot;,&#xd;
+                                            &quot;value&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;NitlpulmxqFyjXOsYcGVphSlFAPbiuarw,AsEGok.nlbwmSJzKNAeaqLUgGoxUHgqrWlikQqQTzw,IUD,NuuNPcukWQoAzsQNHQQ. zQjwqtDxXYfrmZsQ.YLnhurwzMvTQglcwxZKGEtYVXHXXMnILMqACWeuTCghtDmnLRdGLOXYNrdFNHxNBBNlZftxWyoHZA KZWtePaqIS.WIKUEr.SGvxGmkPxR,qwa Y.gsoAsgosUkrvPeBIHnm.plZFNnHOCs,Hd,gdWhxiNzukpuVEJMtRWfnNj.poBkHqOnsT&quot;&#xd;
+                                            }&#xd;
+                                        },&#xd;
+                                        {&#xd;
+                                            &quot;_type&quot;: &quot;CLUSTER&quot;,&#xd;
+                                            &quot;name&quot;: {&#xd;
+                                                &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                &quot;value&quot;: &quot;Dispense amount&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_details&quot;: {&#xd;
+                                                &quot;archetype_id&quot;: {&#xd;
+                                                    &quot;_type&quot;: &quot;ARCHETYPE_ID&quot;,&#xd;
+                                                    &quot;value&quot;: &quot;openEHR-EHR-CLUSTER.medication_supply_amount.v0&quot;&#xd;
+                                                },&#xd;
+                                                &quot;template_id&quot;: {&#xd;
+                                                    &quot;_type&quot;: &quot;TEMPLATE_ID&quot;,&#xd;
+                                                    &quot;value&quot;: &quot;ePrescription (FHIR)&quot;&#xd;
+                                                },&#xd;
+                                                &quot;rm_version&quot;: &quot;1.0.2&quot;&#xd;
+                                            },&#xd;
+                                            &quot;archetype_node_id&quot;: &quot;openEHR-EHR-CLUSTER.medication_supply_amount.v0&quot;,&#xd;
+                                            &quot;items&quot;: [&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Amount description&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0161&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;SmBHKsn.GzYsILShI.WDAStVhZlfZnTvDEJsqTXDxoGkxGXQSYHzgWPNsWgep,RkHOoRFcyCfbDFegDzwLr feEVhsxnOiYLBxqItwqvJKMirk,ujGXyopxWEQHUKDBosZvjbzkblPrbsO.gP.N,ceaazRUwQU ZNy.VliIdQcXkwGcCWyINDIW BjAMtbrPBofkFOgHdik qEETLPM.yZQjhKnrABoKChhuGnXuiNxIQUgjGkwjdNZGUMv ..CIFUePjVvmgjFxScfNwMcChFoxznPpRdag,heAknhFrERw&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Amount&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0131&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_QUANTITY&quot;,&#xd;
+                                                        &quot;magnitude&quot;: 695.3,&#xd;
+                                                        &quot;units&quot;: &quot;1&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Units&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0147&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;NIAc,XDJaryUrovBBRkhfK,STokTOgTkeaDGlJUnAOisNnq mRXgOkULJUvCYBvAo JpiILaWdeJloRpdjmGnFSJqijLxEWmlTQKWhiUBxZgbFKbseOcl,jwdgjtghmkXAhDVBXDr,AlRBjijEasxqPPCQbcZQoWZIQlUmpEtua nHxKUV,laoxvVZUsWkjcjMnenEBIK.wcLDYbMeGIgPqqOtElTJJaP Rg,CPEeJAkSuBdeAcPcYNrXr,paHFIsSfDWcmKDo zsVKEjuihzUJIfervwfyIc, c,ebuiHSV&quot;&#xd;
+                                                    }&#xd;
+                                                },&#xd;
+                                                {&#xd;
+                                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                                    &quot;name&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;Duration of supply&quot;&#xd;
+                                                    },&#xd;
+                                                    &quot;archetype_node_id&quot;: &quot;at0142&quot;,&#xd;
+                                                    &quot;value&quot;: {&#xd;
+                                                        &quot;_type&quot;: &quot;DV_DURATION&quot;,&#xd;
+                                                        &quot;value&quot;: &quot;PT1069791295201180H12M47S&quot;&#xd;
+                                                    }&#xd;
+                                                }&#xd;
+                                            ]&#xd;
+                                        }&#xd;
+                                    ]&#xd;
+                                },&#xd;
+                                {&#xd;
+                                    &quot;_type&quot;: &quot;ELEMENT&quot;,&#xd;
+                                    &quot;name&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;Comment&quot;&#xd;
+                                    },&#xd;
+                                    &quot;archetype_node_id&quot;: &quot;at0167&quot;,&#xd;
+                                    &quot;value&quot;: {&#xd;
+                                        &quot;_type&quot;: &quot;DV_TEXT&quot;,&#xd;
+                                        &quot;value&quot;: &quot;KuSnZUScFrn.InMziJ,XiZrClMArTvZvDVtzxEBKhBKUW,LdyiWqAbKNhOKKTXdSsA ZllIlngTAglBChHSeocgnjW.iQA.jnriDSMnscxtmOnBiTSBmPxBAEjFebUdCWPipkAduSQAVYhoXF.rAiECsjnjsyUNckExkWOfjgARrOxUxRSZBLYVZFHMOhPP c.UusQzYczTymQBczzrwXYuJ.pONutSBQIhxZzvNCNZNueWSgolmUegUF,crhXvAdBSPsJSBzEEYzQVrhHQvTNMpywGokMUEuSDtVqJLbCQq&quot;&#xd;
+                                    }&#xd;
+                                }&#xd;
+                            ]&#xd;
+                        },&#xd;
+                        &quot;timing&quot;: {&#xd;
+                            &quot;value&quot;: &quot;P1D&quot;,&#xd;
+                            &quot;formalism&quot;: &quot;ISO8601&quot;&#xd;
+                        },&#xd;
+                        &quot;action_archetype_id&quot;: &quot;openEHR-EHR-ACTION\\\\.sample_action\\\\.v1&quot;&#xd;
+                    }&#xd;
+                ]&#xd;
+            }&#xd;
+        ]&#xd;
+    },&#xd;
+    &quot;lifecycle_state&quot;: {&#xd;
+        &quot;value&quot;: &quot;complete&quot;,&#xd;
+        &quot;defining_code&quot;: {&#xd;
+            &quot;terminology_id&quot;: {&#xd;
+                &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+                &quot;value&quot;: &quot;openehr&quot;&#xd;
+            },&#xd;
+            &quot;code_string&quot;: &quot;532&quot;&#xd;
+        }&#xd;
+    }&#xd;
+}&#xd;
+  ],&#xd;
+  &quot;audit&quot;: {&#xd;
+    &quot;system_id&quot;: &quot;OPENEHR-TEST-SUITE&quot;,&#xd;
+    &quot;committer&quot;: {&#xd;
+      &quot;_type&quot;: &quot;PARTY_IDENTIFIED&quot;,&#xd;
+      &quot;external_ref&quot;: {&#xd;
+        &quot;id&quot;: {&#xd;
+          &quot;_type&quot;: &quot;HIER_OBJECT_ID&quot;,&#xd;
+          &quot;value&quot;: &quot;6e038f55-f36d-4172-8884-e5bf5e800a32&quot;&#xd;
+        },&#xd;
+        &quot;namespace&quot;: &quot;DEMOGRAPHIC&quot;,&#xd;
+        &quot;type&quot;: &quot;PERSON&quot;&#xd;
+      },&#xd;
+      &quot;name&quot;: &quot;Dr. Kryszyn&quot;&#xd;
+    },&#xd;
+    &quot;time_committed&quot;: {&#xd;
+      &quot;value&quot;: &quot;${__time(yyyy-MM-dd&apos;T&apos;HH:mm:ss.SSSXXX)}&quot;&#xd;
+    },&#xd;
+    &quot;change_type&quot;: {&#xd;
+      &quot;value&quot;: &quot;creation&quot;,&#xd;
+      &quot;defining_code&quot;: {&#xd;
+        &quot;terminology_id&quot;: {&#xd;
+          &quot;_type&quot;: &quot;TERMINOLOGY_ID&quot;,&#xd;
+          &quot;value&quot;: &quot;openehr&quot;&#xd;
+        },&#xd;
+        &quot;code_string&quot;: &quot;249&quot;&#xd;
+      }&#xd;
+    }&#xd;
+  }&#xd;
+}</stringProp>
+                  <stringProp name="Argument.metadata">=</stringProp>
+                </elementProp>
+              </collectionProp>
+            </elementProp>
+            <stringProp name="HTTPSampler.domain">${__P(host)}</stringProp>
+            <stringProp name="HTTPSampler.port">${__P(port)}</stringProp>
+            <stringProp name="HTTPSampler.protocol"></stringProp>
+            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+            <stringProp name="HTTPSampler.path">/ehrbase/rest/openehr/v1/ehr/${ehr_uuid}/contribution</stringProp>
+            <stringProp name="HTTPSampler.method">POST</stringProp>
+            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+            <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          </HTTPSamplerProxy>
+          <hashTree>
+            <RegexExtractor guiclass="RegexExtractorGui" testclass="RegexExtractor" testname="Regular Expression Extractor" enabled="true">
+              <stringProp name="RegexExtractor.useHeaders">true</stringProp>
+              <stringProp name="RegexExtractor.refname">eTagVariable</stringProp>
+              <stringProp name="RegexExtractor.regex">ETag:\s+&quot;(.+)&quot;</stringProp>
+              <stringProp name="RegexExtractor.template">$1$</stringProp>
+              <stringProp name="RegexExtractor.default"></stringProp>
+              <stringProp name="RegexExtractor.match_number"></stringProp>
+            </RegexExtractor>
+            <hashTree/>
+            <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
+              <stringProp name="cacheKey">true</stringProp>
+              <stringProp name="filename"></stringProp>
+              <stringProp name="parameters"></stringProp>
+              <stringProp name="script">import org.apache.commons.io.FileUtils;
+FileUtils.writeStringToFile(new java.io.File(org.apache.jmeter.services.FileServer.getFileServer().getBaseDir() + &apos;/data/&apos; + ${__P(thread_no)} + &apos;_threads/ehrbase_instances_uuids_thread_&apos; + ${__threadNum} + &apos;.csv&apos;), vars.get(&quot;ehr_uuid&quot;) + &quot;,&quot; + vars.get(&quot;eTagVariable&quot;) + &apos;\n&apos;, &apos;UTF-8&apos;, true);</stringProp>
+              <stringProp name="scriptLanguage">groovy</stringProp>
+            </JSR223PostProcessor>
+            <hashTree/>
+          </hashTree>
+          <DebugSampler guiclass="TestBeanGUI" testclass="DebugSampler" testname="Debug Sampler ${ehr_uuid} - ${instance_filename} - ${eTagVariable}" enabled="false">
+            <boolProp name="displayJMeterProperties">false</boolProp>
+            <boolProp name="displayJMeterVariables">true</boolProp>
+            <boolProp name="displaySystemProperties">false</boolProp>
+          </DebugSampler>
+          <hashTree/>
+        </hashTree>
+        <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename">./results/${__P(thread_no)}_threads/ehrbase_post_contribution_${__P(thread_no)}_threads_result.csv</stringProp>
+        </ResultCollector>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <url>true</url>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
