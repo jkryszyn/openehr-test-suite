@@ -18,8 +18,8 @@
           <boolProp name="LoopController.continue_forever">false</boolProp>
           <intProp name="LoopController.loops">-1</intProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">${__P(thread_no)}</stringProp>
-        <stringProp name="ThreadGroup.ramp_time">${__P(ramp_up)}</stringProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">0</stringProp>
         <boolProp name="ThreadGroup.scheduler">true</boolProp>
         <stringProp name="ThreadGroup.duration">${__P(duration)}</stringProp>
         <stringProp name="ThreadGroup.delay">${__P(startup_delay)}</stringProp>
@@ -40,7 +40,7 @@
         </HeaderManager>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="CSV Data Set Config" enabled="true">
-          <stringProp name="filename">./data/${__P(thread_no)}_threads/ehrserver_ehr_uuids_thread_${__threadNum}.csv</stringProp>
+          <stringProp name="filename">./data/single_thread_posting/ehrserver_ehr_uuids.csv</stringProp>
           <stringProp name="fileEncoding">UTF-8</stringProp>
           <stringProp name="variableNames">ehr_uuid</stringProp>
           <boolProp name="ignoreFirstLine">false</boolProp>
@@ -868,7 +868,7 @@
               <stringProp name="script">import org.apache.commons.io.FileUtils;
 
 if(vars.get(&quot;ehrserver_composition_uuid&quot;) != &quot;ERROR&quot;) {
-	FileUtils.writeStringToFile(new java.io.File(org.apache.jmeter.services.FileServer.getFileServer().getBaseDir() + &apos;/data/&apos; + ${__P(thread_no)} + &apos;_threads/ehrserver_instances_uuids_thread_&apos; + ${__threadNum} + &apos;.csv&apos;), vars.get(&quot;ehr_uuid&quot;) + &quot;,&quot; + vars.get(&quot;ehrserver_composition_uuid&quot;) + &apos;\n&apos;, &apos;UTF-8&apos;, true);
+	FileUtils.writeStringToFile(new java.io.File(org.apache.jmeter.services.FileServer.getFileServer().getBaseDir() + &apos;/data/single_thread_posting/ehrserver_instances_uuids.csv&apos;), vars.get(&quot;ehr_uuid&quot;) + &quot;,&quot; + vars.get(&quot;ehrserver_composition_uuid&quot;) + &apos;\n&apos;, &apos;UTF-8&apos;, true);
 }
 </stringProp>
             </JSR223PostProcessor>
@@ -909,7 +909,7 @@ if(vars.get(&quot;ehrserver_composition_uuid&quot;) != &quot;ERROR&quot;) {
               <connectTime>true</connectTime>
             </value>
           </objProp>
-          <stringProp name="filename">./results/${__P(thread_no)}_threads/ehrserver_post_compositions_${__P(thread_no)}_threads_result.csv</stringProp>
+          <stringProp name="filename">./results/single_thread_posting/ehrserver_post_compositions_result.csv</stringProp>
         </ResultCollector>
         <hashTree/>
         <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">

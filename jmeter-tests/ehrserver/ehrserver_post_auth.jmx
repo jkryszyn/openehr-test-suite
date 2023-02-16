@@ -78,7 +78,7 @@
             <stringProp name="JSONPostProcessor.referenceNames">token</stringProp>
             <stringProp name="JSONPostProcessor.jsonPathExprs">$.token</stringProp>
             <stringProp name="JSONPostProcessor.match_numbers"></stringProp>
-            <stringProp name="JSONPostProcessor.defaultValues">No_Default</stringProp>
+            <stringProp name="JSONPostProcessor.defaultValues">ERROR</stringProp>
           </JSONPostProcessor>
           <hashTree/>
           <JSR223PostProcessor guiclass="TestBeanGUI" testclass="JSR223PostProcessor" testname="JSR223 PostProcessor" enabled="true">
@@ -87,7 +87,11 @@
             <stringProp name="filename"></stringProp>
             <stringProp name="cacheKey">true</stringProp>
             <stringProp name="script">import org.apache.commons.io.FileUtils;
-FileUtils.writeStringToFile(new java.io.File(org.apache.jmeter.services.FileServer.getFileServer().getBaseDir() + &apos;/data/token.txt&apos;), vars.get(&apos;token&apos;), &apos;UTF-8&apos;, true);</stringProp>
+
+if(vars.get(&apos;token&apos;) != &quot;ERROR&quot;)
+	FileUtils.writeStringToFile(new java.io.File(org.apache.jmeter.services.FileServer.getFileServer().getBaseDir() + &apos;/data/token.txt&apos;), vars.get(&apos;token&apos;), &apos;UTF-8&apos;, true);
+else
+	OUT.println(&quot;Could not retrieve a token from EHRServer.&quot;)</stringProp>
           </JSR223PostProcessor>
           <hashTree/>
         </hashTree>
