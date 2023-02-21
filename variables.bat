@@ -16,7 +16,7 @@ set OPENEHR_TEST_EHRSERVER_PORT=8888
 ::number of compositions which will be created for each EHR
 set OPENEHR_TEST_CONTRIBUTIONS_PER_USER_NO=10
 set OPENEHR_TEST_STARTUP_DELAY=0
-set OPENEHR_TEST_DURATION=180
+set OPENEHR_TEST_DURATION=300
 
 :: flag which indicates if variables were set
 set variables_set=1
