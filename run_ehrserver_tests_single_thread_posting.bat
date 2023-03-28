@@ -11,7 +11,7 @@ if exist .\results\single_thread_posting\ rmdir .\results\single_thread_posting\
 call run_post_auth.bat
 set /p OPENEHR_TEST_EHRSERVER_AUTH=<.\data\token.txt
 
-set threads_no=1 2 5 10 20 30 40 50 50
+set threads_no=1 2 3 4 5 6 7 8 9 10 12 15 20 25 30 35 40 45 50
 
 call run_post_ehrs_single_thread_posting.bat
 
