@@ -3,3 +3,6 @@ jmeter-tests/ehrbase/results/*
 jmeter-tests/ehrserver/data/*
 jmeter-tests/ehrserver/results/*
 jmeter.log
+matlab/*.mat
+matlab/*.asv
+matlab/results
